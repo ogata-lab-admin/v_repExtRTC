@@ -1,22 +1,13 @@
-// Copyright 2006-2014 Dr. Marc Andreas Freese. All rights reserved. 
-// marc@coppeliarobotics.com
-// www.coppeliarobotics.com
-// 
-// -------------------------------------------------------------------
-// This file is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-// 
-// You are free to use/modify/distribute this file for whatever purpose!
-// -------------------------------------------------------------------
-//
-// This file was automatically created for V-REP release V3.1.1 on March 26th 2014
+// Copyright: 2014, Ogata-laboratory, Waseda University.
+// Author: Yuki Suga (ysuga@ysuga.net)
+// URL: http://ogata-lab.jp
+// This file is distributed under the GNU Public License version 3
 
 #include "v_repExtRTC.h"
 #include "v_repLib.h"
 #include <iostream>
-
-#include "RobotRTC.h"
+// For RTC 
+#include "RTCHelper.h"
 
 #ifdef _WIN32
 	#include <shlwapi.h>
@@ -34,9 +25,6 @@
 LIBRARY vrepLib; // the V-REP library that we will dynamically load and bind
 
 
-
-// For RTC 
-#include "RTCHelper.h"
 
 // This is the plugin start routine (called just once, just after the plugin was loaded):
 VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
@@ -92,7 +80,6 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
 	// Here you could also register custom Lua functions or custom Lua constants
 	// etc.
 
-	//CAccess::createRobot();
 	initRTM();
 
 	return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
@@ -102,11 +89,8 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
 VREP_DLLEXPORT void v_repEnd()
 {
 	// Here you could handle various clean-up tasks
-  exitRTM();
-  //CAccess::destroyRobot();
-
-  unloadVrepLibrary(vrepLib); // release the library
-
+        exitRTM();
+	unloadVrepLibrary(vrepLib); // release the library
 }
 
 
@@ -125,45 +109,37 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	// For a complete list of messages that you can intercept/react with, search for "sim_message_eventcallback"-type constants
 	// in the V-REP user manual.
 	
-
+	// Task Queue Check for unsynchronized task thrown from Service Port of RT-Component.
 	Task t = taskQueue.popTask();
-
+	simInt ret;
 	switch(t.value){
 	case Task::START:
-	  {
-	    std::cout << "Starting Simulation" << std::endl;
-	    simInt ret = simStartSimulation();
-
-	    if (ret == 0) {
-	      returnQueue.returnReturn(Return(Return::FAILED));
-	    } else if(ret < 0) {
-	      returnQueue.returnReturn(Return(Return::ERROR));
-	    } else {
-	      returnQueue.returnReturn(Return(Return::OK));
-	    }
+	  std::cout << "Starting Simulation" << std::endl;
+	  ret = simStartSimulation();
+	  if (ret == 0) {
+	    returnQueue.returnReturn(Return(Return::FAILED));
+	  } else if(ret < 0) {
+	    returnQueue.returnReturn(Return(Return::ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::OK));
 	  }
 	  break;
 	case Task::STOP:
-	  {
-	    std::cout << "Stopping Simulation" << std::endl;
-	    simInt ret = simStopSimulation();
-	    if (ret == 0) {
-	      returnQueue.returnReturn(Return(Return::FAILED));
-	    } else if(ret < 0) {
-	      returnQueue.returnReturn(Return(Return::ERROR));
-	    } else {
-	      returnQueue.returnReturn(Return(Return::OK));
-	    }
+	  std::cout << "Stopping Simulation" << std::endl;
+	  ret = simStopSimulation();
+	  if (ret == 0) {
+	    returnQueue.returnReturn(Return(Return::FAILED));
+	  } else if(ret < 0) {
+	    returnQueue.returnReturn(Return(Return::ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::OK));
 	  }
 	  break;
 	case Task::SPAWN:
-	  {
-	    if (spawnRobotRTC(t.key) < 0) {
-	      returnQueue.returnReturn(Return(Return::ERROR));
-	    } else {
-	      returnQueue.returnReturn(Return(Return::OK));
-	    }
-
+	  if (spawnRobotRTC(t.key) < 0) {
+	    returnQueue.returnReturn(Return(Return::ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::OK));
 	  }
 	  break;
 	default:
@@ -172,7 +148,7 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	refreshDlgFlag=true; // always a good idea to trigger a refresh of this plugin's dialog here
 
 	if (message==sim_message_eventcallback_refreshdialogs)
-		refreshDlgFlag=true; // V-REP dialogs were refreshed. Maybe a good idea to refresh this plugin's dialog too
+	  refreshDlgFlag=true; // V-REP dialogs were refreshed. Maybe a good idea to refresh this plugin's dialog too
 
 	if (message==sim_message_eventcallback_menuitemselected)
 	{ // A custom menu bar entry was selected..
@@ -194,26 +170,16 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 
 		if (sceneContentChanged)
 		{ // we actualize plugin objects for changes in the scene
-
 			//...
-		  // std::cout << "content_changed" << std::endl;
-		  int objHandle = 0;
-		  int i = 0;
-		  while(true) {
-		    objHandle = simGetObjects(i++, sim_handle_all);
-		    if (objHandle==-1) break;
-		    //if (getFromAssociatedObject(objHandle) != NULL) break;
-		    //  std::cout << " instance_pass : " << simGetObjectName(objHandle) << std::endl;
-		  }
-		  // std::cout << "parsed" << std::endl;
 			refreshDlgFlag=true; // always a good idea to trigger a refresh of this plugin's dialog here
 		}
 	}
 
 	if (message==sim_message_eventcallback_mainscriptabouttobecalled)
 	{ // The main script is about to be run (only called while a simulation is running (and not paused!))
-	  std::cout << "tick:" << simGetSimulationTime() << std::endl;
-	  tickRTCs(0.050);
+	  
+	       //  main script is called every dynamics calculation. 
+	        tickRTCs(0.050);
 	}
 	if (message==sim_message_eventcallback_simulationabouttostart)
 	{ // Simulation is about to start
