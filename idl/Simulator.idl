@@ -1,0 +1,85 @@
+
+#include "BasicDataType.idl"
+#include "ExtendedDataTypes.idl"
+
+module ssr {
+  enum RETURN_VALUE {
+    RETVAL_OK,
+    RETVAL_INVALID_PRECONDITION,
+    RETVAL_UNKNOWN_ERROR
+  };
+
+  typedef long OBJECT_HANDLE;
+
+  interface Simulator {
+
+    /**
+     */
+    RETURN_VALUE loadProject(in string path);
+
+    /**
+     */
+    RETURN_VALUE start();
+
+    /**
+     */
+    RETURN_VALUE pause();
+
+    /**
+     */
+    RETURN_VALUE resume();
+
+    /**
+     */
+    RETURN_VALUE stop();
+
+    /**
+     */
+    RETURN_VALUE spawnRobotRTC(in string objectName, in string arg);
+
+    /**
+     */
+    RETURN_VALUE spawnRangeRTC(in string objectName, in string arg);
+
+    /**
+     */
+    RETURN_VALUE killRobotRTC(in string objectName);
+
+    /**
+     */
+    RETURN_VALUE getObjectHandle(in string objectName, out OBJECT_HANDLE handle);
+
+    /**
+     */
+    RETURN_VALUE getObjectPose(in OBJECT_HANDLE handle, out RTC::Pose3D pose);
+
+  };
+
+  typedef sequence<string> StringSeq;
+
+  interface SimulatedRobot {
+    
+    /**
+     */
+    RETURN_VALUE getJointTagNames(out StringSeq tags);
+    
+    /**
+    RETURN_VALUE setJointAngle(in string tag, in double radian);
+
+    RETURN_VALUE setJointVelocity(in string tag, in double radian_per_sec);
+
+    RETURN_VALUE setJointForce(in string tag, in double radian_per_sec_sec);
+
+    RETURN_VALUE setJointAngle(in string tag, out double radian);
+
+    RETURN_VALUE setJointVelocity(in string tag, out double radian_per_sec);
+
+    RETURN_VALUE setJointForce(in string tag, out double radian_per_sec_sec);
+    **/
+
+  };
+  
+};
+
+
+  

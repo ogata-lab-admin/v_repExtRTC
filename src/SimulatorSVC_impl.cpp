@@ -81,7 +81,19 @@ ssr::RETURN_VALUE SimulatorSVC_impl::stop()
 ssr::RETURN_VALUE SimulatorSVC_impl::spawnRobotRTC(const char* objectName, const char* arg)
 {
   ssr::RETURN_VALUE result;
-  Task task(Task::SPAWN);
+  Task task(Task::SPAWNROBOT);
+  task.key = objectName;
+  taskQueue.pushTask(task);
+  Return retval = returnQueue.waitReturn();
+  result = ssr::RETVAL_OK;
+  return result;
+}
+
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnRangeRTC(const char* objectName, const char* arg)
+{
+  std::cout << "SPAWNRANGE:" << objectName << std::endl;
+  ssr::RETURN_VALUE result;
+  Task task(Task::SPAWNRANGE);
   task.key = objectName;
   taskQueue.pushTask(task);
   Return retval = returnQueue.waitReturn();

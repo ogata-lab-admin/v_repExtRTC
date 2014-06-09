@@ -1,17 +1,17 @@
 // -*- C++ -*-
 /*!
  * @file  RobotRTC.cpp
- * @brief Simulator Robot RTC
- * @date $Date$
- *
- * $Id$
+ * @brief Simulator Robot RTC for VREP simulator
+ * @date 2014/06/05
+ * @author Yuki Suga (ysuga@ysuga.net)
+ * @copyright 2014, Ogata Laboratory, Waseda University
  */
 
 #include "RobotRTC.h"
-
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <v_repLib.h>
 // Module specification
 // <rtc-template block="module_spec">
 static const char* robotrtc_spec[] =
@@ -52,7 +52,7 @@ RobotRTC::RobotRTC(RTC::Manager* manager)
     m_targetPositionIn("targetPosition", m_targetPosition),
     m_currentForceOut("currentForce", m_currentForce),
     m_currentVelocityOut("currentVelocity", m_currentVelocity),
-    m_currentPositiojnOut("currentPosition", m_currentPositiojn)
+    m_currentPositionOut("currentPosition", m_currentPosition)
 
     // </rtc-template>
 {
@@ -79,7 +79,7 @@ RTC::ReturnCode_t RobotRTC::onInitialize()
   // Set OutPort buffer
   addOutPort("currentForce", m_currentForceOut);
   addOutPort("currentVelocity", m_currentVelocityOut);
-  addOutPort("currentPosition", m_currentPositiojnOut);
+  addOutPort("currentPosition", m_currentPositionOut);
   
   // Set service provider to Ports
   
@@ -93,7 +93,8 @@ RTC::ReturnCode_t RobotRTC::onInitialize()
   // Bind variables and configuration variable
   bindParameter("objectName", m_objectName, "none");
   //bindParameter("objectHandle", m_objectHandle, "-1");
-  bindParameter("activeJointNames", m_activeJointNames, "[]");
+  bindParameter("controlledJointNames", m_controlledJointNames, "[]");
+  bindParameter("observedJointNames", m_observedJointNames, "[]");
   // </rtc-template>
 
   std::vector<std::string> keys;
@@ -157,10 +158,11 @@ RTC::ReturnCode_t RobotRTC::onShutdown(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
 {
-  m_activeJointHandle.clear();
+  m_controlledJointHandle.clear();
+  m_observedJointHandle.clear();
 
-  std::string names = m_activeJointNames;
-  std::cout << "activeJointNames=" << names << std::endl;
+  std::string names = m_controlledJointNames;
+  std::cout << "controlledJointNames=" << names << std::endl;
   std::stringstream nss(names);
   std::string token;
   while(std::getline(nss, token, ',')) {
@@ -174,13 +176,36 @@ RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
       std::cout << "Can not find active joint name " << token << std::endl;
       return RTC::RTC_ERROR;
     }
-    m_activeJointHandle.push_back(i->second);
+    m_controlledJointHandle.push_back(i->second);
+  }
+  for (int i = 0;i < m_controlledJointHandle.size();i++) {
+    std::cout << "controlledJointHandle:" << m_controlledJointHandle[i] << std::endl;
   }
 
-
-  for (int i = 0;i < m_activeJointHandle.size();i++) {
-    std::cout << "acgiveJointHandle:" << m_activeJointHandle[i] << std::endl;
+  names = m_controlledJointNames;
+  std::cout << "observedJointNames=" << names << std::endl;
+  std::stringstream nss2(names);
+  //  std::string token;
+  while(std::getline(nss2, token, ',')) {
+    std::stringstream trimmer;
+    trimmer << token;
+    token.clear();
+    trimmer >> token;
+    std::cout << " key = " << token << std::endl;
+    JointHandleMap::iterator i = m_jointHandleMap.find(token);
+    if (i == m_jointHandleMap.end()) {
+      std::cout << "Can not find active joint name " << token << std::endl;
+      return RTC::RTC_ERROR;
+    }
+    m_observedJointHandle.push_back(i->second);
   }
+  for (int i = 0;i < m_observedJointHandle.size();i++) {
+    std::cout << "observedJointHandle:" << m_observedJointHandle[i] << std::endl;
+  }
+
+  m_currentPosition.data.length(m_observedJointHandle.size());
+  m_currentVelocity.data.length(m_observedJointHandle.size());
+  m_currentForce.data.length(m_observedJointHandle.size());
   return RTC::RTC_OK;
 }
 
@@ -193,7 +218,51 @@ RTC::ReturnCode_t RobotRTC::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
 {
-  std::cout << "onExecute" << std::endl;
+  if (m_targetPositionIn.isNew()) {
+    m_targetPositionIn.read();
+    if (m_controlledJointHandle.size() != m_targetPosition.data.length()) {
+      std::cout << "Invalid Data number. This RTC reuqires " << m_controlledJointHandle.size() << " data size." << std::ends;
+      std::cout << "But " << m_targetPosition.data.length() << " data is sent." << std::endl;
+      return RTC::RTC_ERROR;
+    }
+    for(uint32_t i = 0;i < m_targetPosition.data.length();i++) {
+      simSetJointTargetPosition(m_controlledJointHandle[i], m_targetPosition.data[i]);
+    }
+  }
+
+  if (m_targetVelocityIn.isNew()) {
+    m_targetVelocityIn.read();
+    if (m_controlledJointHandle.size() != m_targetVelocity.data.length()) {
+      std::cout << "Invalid Data number. This RTC reuqires " << m_controlledJointHandle.size() << " data size." << std::ends;
+      std::cout << "But " << m_targetVelocity.data.length() << " data is sent." << std::endl;
+      return RTC::RTC_ERROR;
+    }
+    for(uint32_t i = 0;i < m_targetVelocity.data.length();i++) {
+      simSetJointTargetVelocity(m_controlledJointHandle[i], m_targetVelocity.data[i]);
+    }
+  }
+
+  if (m_targetForceIn.isNew()) {
+    m_targetForceIn.read();
+    if (m_controlledJointHandle.size() != m_targetForce.data.length()) {
+      std::cout << "Invalid Data number. This RTC reuqires " << m_controlledJointHandle.size() << " data size." << std::ends;
+      std::cout << "But " << m_targetForce.data.length() << " data is sent." << std::endl;
+      return RTC::RTC_ERROR;
+    }
+  }
+
+  size_t sz = m_observedJointHandle.size();
+  for(uint32_t i = 0;i < sz;i++) {
+    float buf;
+    if (simGetJointPosition(m_observedJointHandle[i], &buf) < 0) {
+      std::cout << "GetJointPosition (handle=" << m_observedJointHandle[i] << ") failed." << std::endl;
+      return RTC::RTC_ERROR;
+    }
+    m_currentPosition.data[i] = buf;
+  }
+  m_currentPositionOut.write();
+  
+
   return RTC::RTC_OK;
 }
 

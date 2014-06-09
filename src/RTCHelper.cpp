@@ -1,6 +1,7 @@
 #include "rtm/Manager.h"
 #include <iostream>
 #include "VREPRTC.h"
+#include "RangeRTC.h"
 #include "RobotRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
@@ -26,6 +27,7 @@ int ManagerRunner::svc() {
 void MyModuleInit(RTC::Manager* manager)
 {
   RobotRTCInit(manager);
+  RangeRTCInit(manager);
   VREPRTCInit(manager);
   RTC::RtcBase* comp;
 
@@ -62,7 +64,7 @@ bool exitRTM() {
 #include <sstream>
 
 static int indent = 0;
-static simInt getChildren(simInt h, std::vector<simInt>& jointHandles, std::vector<std::string>& jointNames) {
+static simInt getChildren(simInt h, std::vector<simInt>& jointHandles, std::vector<std::string>& jointNames, simInt typeFilter) {
   indent += 1;
   int i = 0;
   simInt r = 0;
@@ -74,19 +76,56 @@ static simInt getChildren(simInt h, std::vector<simInt>& jointHandles, std::vect
     }
     std::string name = simGetObjectName(r);
     simInt type = simGetObjectType(r);
-    if (type == sim_object_joint_type) {
-      //for (int j = 0;j < indent;j++) {
-      //std::cout << " ";
-      //}
-      //std::cout << name << ": " << r << std::endl;
+    if (type == typeFilter) {
       jointHandles.push_back(r);
       jointNames.push_back(name);
     }
-    getChildren(r, jointHandles, jointNames);
+    getChildren(r, jointHandles, jointNames, typeFilter);
   }
   indent -= 1;
   return 0;
 }
+
+int spawnRangeRTC(std::string& key) {
+  std::cout << " spawning RTC (objectName = " << key << ")" << std::endl;
+  simInt objHandle = simGetObjectHandle(key.c_str());
+  if (objHandle == -1) {
+    std::cout << " failed to get object handle." << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+    return -1;
+  }
+
+  std::vector<simInt> sensorHandles;
+  std::vector<std::string> sensorNames;
+  getChildren(objHandle, sensorHandles, sensorNames, sim_object_proximitysensor_type);
+
+  if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
+    std::cout << " failed to get object handle." << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+    return -1;
+  }
+
+  
+  simInt bufSize = 4096;
+  simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
+  if (tubeHandle < 0) {
+    std::cout << " can not open Tube to " << key << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+  }
+
+  std::ostringstream arg_oss;
+  arg_oss << "RangeRTC?" 
+	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+	  << "conf.default.objectName=" << key << "&"
+    ///<< "conf.default.activeJointNames=" << names << "&"
+	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
+	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
+	  << "conf.__innerparam.bufSize=" << bufSize;
+  RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+  robotContainer.push(cmp->getObjRef());
+  return 0;
+}
+
 
 int spawnRobotRTC(std::string& key) {
   std::cout << " spawning RTC (objectName = " << key << ")" << std::endl;
@@ -99,7 +138,7 @@ int spawnRobotRTC(std::string& key) {
 
   std::vector<simInt> jointHandles;
   std::vector<std::string> jointNames;
-  getChildren(objHandle, jointHandles, jointNames);
+  getChildren(objHandle, jointHandles, jointNames, sim_object_joint_type);
 
   std::ostringstream name_oss;
   for (int i = 0;i < jointNames.size();i++) {
@@ -125,7 +164,8 @@ int spawnRobotRTC(std::string& key) {
   arg_oss << "RobotRTC?" 
 	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
 	  << "conf.default.objectName=" << key << "&"
-	  << "conf.default.activeJointNames=" << names << "&"
+    	  << "conf.default.controlledJointNames=" << names << "&"
+	  << "conf.default.observedJointNames=" << names << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << "conf.__innerparam.allNames=" << names << "&"
 	  << "conf.__innerparam.allHandles=" << handles;

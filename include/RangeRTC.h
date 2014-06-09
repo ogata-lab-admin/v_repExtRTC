@@ -1,14 +1,14 @@
 // -*- C++ -*-
 /*!
- * @file  RobotRTC.h
+ * @file  RangeRTC.h
  * @brief Simulator Robot RTC
  * @date  $Date$
  *
  * $Id$
  */
 
-#ifndef ROBOTRTC_H
-#define ROBOTRTC_H
+#ifndef RANGERTC_H
+#define RANGERTC_H
 
 #include <rtm/idl/BasicDataTypeSkel.h>
 #include <rtm/idl/ExtendedDataTypesSkel.h>
@@ -34,29 +34,13 @@
 
 using namespace RTC;
 
-class JointHandleMap : public std::map<std::string, int32_t>
-{
-public:
-  JointHandleMap() {}
-  ~JointHandleMap() {}
-
-public:
-  void append(std::string& key, int32_t& value) {
-    insert(JointHandleMap::value_type(key, value));
-  }
-  int32_t get(std::string& key) {
-    return -1;
-  }
-};
-
-typedef std::vector<int32_t> JointHandleList;
 
 /*!
- * @class RobotRTC
- * @brief Simulator Robot RTC
+ * @class RangeRTC
+ * @brief Simulator Range RTC
  *
  */
-class RobotRTC
+class RangeRTC
   : public RTC::DataFlowComponentBase
 {
  public:
@@ -64,12 +48,12 @@ class RobotRTC
    * @brief constructor
    * @param manager Maneger Object
    */
-  RobotRTC(RTC::Manager* manager);
+  RangeRTC(RTC::Manager* manager);
 
   /*!
    * @brief destructor
    */
-  ~RobotRTC();
+  ~RangeRTC();
 
   // <rtc-template block="public_attribute">
   
@@ -99,7 +83,7 @@ class RobotRTC
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onFinalize();
+   virtual RTC::ReturnCode_t onFinalize();
 
   /***
    *
@@ -252,52 +236,24 @@ class RobotRTC
 
   /*!
    * 
-   * - Name:  controlledJointNames
+   * - Name:  activeJointNames
    * - DefaultValue: []
    */
-  std::string m_controlledJointNames;
-
-  /*!
-   * 
-   * - Name:  observedJointNames
-   * - DefaultValue: []
-   */
-  std::string m_observedJointNames;
+  std::string m_offsetStr;
 
   // </rtc-template>
 
   // DataInPort declaration
   // <rtc-template block="inport_declare">
-  RTC::TimedDoubleSeq m_targetForce;
-  /*!
-   */
-  InPort<RTC::TimedDoubleSeq> m_targetForceIn;
-  RTC::TimedDoubleSeq m_targetVelocity;
-  /*!
-   */
-  InPort<RTC::TimedDoubleSeq> m_targetVelocityIn;
-  RTC::TimedDoubleSeq m_targetPosition;
-  /*!
-   */
-  InPort<RTC::TimedDoubleSeq> m_targetPositionIn;
-  
   // </rtc-template>
 
 
   // DataOutPort declaration
   // <rtc-template block="outport_declare">
-  RTC::TimedDoubleSeq m_currentForce;
+  RTC::RangeData m_range;
   /*!
    */
-  OutPort<RTC::TimedDoubleSeq> m_currentForceOut;
-  RTC::TimedDoubleSeq m_currentVelocity;
-  /*!
-   */
-  OutPort<RTC::TimedDoubleSeq> m_currentVelocityOut;
-  RTC::TimedDoubleSeq m_currentPosition;
-  /*!
-   */
-  OutPort<RTC::TimedDoubleSeq> m_currentPositionOut;
+  OutPort<RTC::RangeData> m_rangeOut;
   
   // </rtc-template>
 
@@ -326,15 +282,15 @@ class RobotRTC
   // </rtc-template>
 
   int m_objectHandle;
-  JointHandleMap m_jointHandleMap;
-  JointHandleList m_controlledJointHandle;
-  JointHandleList m_observedJointHandle;
+  int m_tubeHandle;
+  int m_bufferSize;
+  uint8_t* m_pBuffer;
 };
 
 
 extern "C"
 {
-  DLL_EXPORT void RobotRTCInit(RTC::Manager* manager);
+  DLL_EXPORT void RangeRTCInit(RTC::Manager* manager);
 };
 
 #endif // ROBOTRTC_H

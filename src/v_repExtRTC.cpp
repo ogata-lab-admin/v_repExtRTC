@@ -135,12 +135,21 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	    returnQueue.returnReturn(Return(Return::OK));
 	  }
 	  break;
-	case Task::SPAWN:
+	case Task::SPAWNROBOT:
 	  if (spawnRobotRTC(t.key) < 0) {
 	    returnQueue.returnReturn(Return(Return::ERROR));
 	  } else {
 	    returnQueue.returnReturn(Return(Return::OK));
 	  }
+	  break;
+	case Task::SPAWNRANGE:
+	  std::cout << "Task::Spawnrange" << std::endl;
+	  if (spawnRangeRTC(t.key) < 0) {
+	    returnQueue.returnReturn(Return(Return::ERROR));
+	  } else {
+
+	  }
+	  returnQueue.returnReturn(Return(Return::OK));
 	  break;
 	default:
 	  break;

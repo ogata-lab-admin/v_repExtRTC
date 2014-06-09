@@ -20,7 +20,8 @@ class Task {
     INVALID = -1,
     START = 0,
     STOP = 1,
-    SPAWN = 2,
+    SPAWNROBOT = 2,
+    SPAWNRANGE = 3,
   };
   int value;
   std::string key;
