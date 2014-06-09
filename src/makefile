@@ -4,7 +4,7 @@ VREP_PROGRAMMING_DIR=${VREP_DIR}/programming/
 CFLAGS = -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
 LDFLAGS = -lpthread -ldl `rtm-config --libs`
 
-OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o
+OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o
 
 OS = $(shell uname -s)
 ECHO=@

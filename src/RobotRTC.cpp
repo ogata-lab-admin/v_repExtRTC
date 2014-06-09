@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <math.h>
 #include <v_repLib.h>
 // Module specification
 // <rtc-template block="module_spec">
@@ -250,7 +251,11 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
       return RTC::RTC_ERROR;
     }
   }
-
+  
+  float dt = simGetSimulationTimeStep();
+  float time = simGetSimulationTime();
+  long sec = floor(time);
+  long nsec = (time - sec) * 1000*1000*1000;
   size_t sz = m_observedJointHandle.size();
   for(uint32_t i = 0;i < sz;i++) {
     float buf;
@@ -258,10 +263,30 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
       std::cout << "GetJointPosition (handle=" << m_observedJointHandle[i] << ") failed." << std::endl;
       return RTC::RTC_ERROR;
     }
+    double old_pos = m_currentPosition.data[i];
     m_currentPosition.data[i] = buf;
+    double v = (buf - old_pos) / dt;
+    
+    m_currentVelocity.data[i] = v;
+
+    if (simJointGetForce(m_observedJointHandle[i], &buf) < 0) {
+      std::cout << "GetJointForce (handle=" << m_observedJointHandle[i] << ") failed." << std::endl;
+      return RTC::RTC_ERROR;
+    }
+    m_currentForce.data[i] = buf;
+
   }
+  m_currentPosition.tm.sec = sec;
+  m_currentPosition.tm.nsec = nsec;
   m_currentPositionOut.write();
-  
+
+  m_currentVelocity.tm.sec = sec;
+  m_currentVelocity.tm.nsec = nsec;
+  m_currentVelocityOut.write();
+
+  m_currentForce.tm.sec = sec;
+  m_currentForce.tm.nsec = nsec;
+  m_currentForceOut.write();
 
   return RTC::RTC_OK;
 }

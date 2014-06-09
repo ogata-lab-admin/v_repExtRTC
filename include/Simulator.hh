@@ -144,6 +144,7 @@ _CORBA_MODULE_BEG
     RETURN_VALUE stop();
     RETURN_VALUE spawnRobotRTC(const char* objectName, const char* arg);
     RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg);
+    RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
     RETURN_VALUE killRobotRTC(const char* objectName);
     RETURN_VALUE getObjectHandle(const char* objectName, ::ssr::OBJECT_HANDLE& handle);
     RETURN_VALUE getObjectPose(::ssr::OBJECT_HANDLE handle, ::RTC::Pose3D& pose);
@@ -187,6 +188,7 @@ _CORBA_MODULE_BEG
     virtual RETURN_VALUE stop() = 0;
     virtual RETURN_VALUE spawnRobotRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg) = 0;
+    virtual RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE killRobotRTC(const char* objectName) = 0;
     virtual RETURN_VALUE getObjectHandle(const char* objectName, ::ssr::OBJECT_HANDLE& handle) = 0;
     virtual RETURN_VALUE getObjectPose(::ssr::OBJECT_HANDLE handle, ::RTC::Pose3D& pose) = 0;

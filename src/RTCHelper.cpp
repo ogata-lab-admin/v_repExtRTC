@@ -2,6 +2,7 @@
 #include <iostream>
 #include "VREPRTC.h"
 #include "RangeRTC.h"
+#include "CameraRTC.h"
 #include "RobotRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
@@ -28,6 +29,7 @@ void MyModuleInit(RTC::Manager* manager)
 {
   RobotRTCInit(manager);
   RangeRTCInit(manager);
+  CameraRTCInit(manager);
   VREPRTCInit(manager);
   RTC::RtcBase* comp;
 
@@ -123,6 +125,49 @@ int spawnRangeRTC(std::string& key) {
 	  << "conf.__innerparam.bufSize=" << bufSize;
   RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
   robotContainer.push(cmp->getObjRef());
+  return 0;
+}
+
+
+int spawnCameraRTC(std::string& key) {
+  std::cout << " spawning Camera RTC (objectName = " << key << ")" << std::endl;
+  simInt objHandle = simGetObjectHandle(key.c_str());
+  if (objHandle == -1) {
+    std::cout << " failed to get object handle." << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+    return -1;
+  }
+
+  /*
+  std::vector<simInt> sensorHandles;
+  std::vector<std::string> sensorNames;
+  getChildren(objHandle, sensorHandles, sensorNames, sim_object_proximitysensor_type);
+
+  if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
+    std::cout << " failed to get object handle." << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+    return -1;
+  }
+
+  
+  simInt bufSize = 4096;
+  simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
+  if (tubeHandle < 0) {
+    std::cout << " can not open Tube to " << key << std::endl;
+    returnQueue.returnReturn(Return(Return::ERROR));
+  }
+
+  std::ostringstream arg_oss;
+  arg_oss << "RangeRTC?" 
+	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+	  << "conf.default.objectName=" << key << "&"
+    ///<< "conf.default.activeJointNames=" << names << "&"
+	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
+	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
+	  << "conf.__innerparam.bufSize=" << bufSize;
+  RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+  robotContainer.push(cmp->getObjRef());
+  */
   return 0;
 }
 

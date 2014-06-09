@@ -101,6 +101,18 @@ ssr::RETURN_VALUE SimulatorSVC_impl::spawnRangeRTC(const char* objectName, const
   return result;
 }
 
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnCameraRTC(const char* objectName, const char* arg)
+{
+  std::cout << "SPAWNCAMERA:" << objectName << std::endl;
+  ssr::RETURN_VALUE result;
+  Task task(Task::SPAWNCAMERA);
+  task.key = objectName;
+  taskQueue.pushTask(task);
+  Return retval = returnQueue.waitReturn();
+  result = ssr::RETVAL_OK;
+  return result;
+}
+
 ssr::RETURN_VALUE SimulatorSVC_impl::killRobotRTC(const char* objectName)
 {
 	ssr::RETURN_VALUE result;

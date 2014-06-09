@@ -43,6 +43,10 @@ module ssr {
 
     /**
      */
+    RETURN_VALUE spawnCameraRTC(in string objectName, in string arg);
+
+    /**
+     */
     RETURN_VALUE killRobotRTC(in string objectName);
 
     /**

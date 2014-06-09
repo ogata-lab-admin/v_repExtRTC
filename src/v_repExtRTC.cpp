@@ -151,6 +151,15 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	  }
 	  returnQueue.returnReturn(Return(Return::OK));
 	  break;
+	case Task::SPAWNCAMERA:
+	  std::cout << "Task::SpawnCamera" << std::endl;
+	  if (spawnCameraRTC(t.key) < 0) {
+	    returnQueue.returnReturn(Return(Return::ERROR));
+	  } else {
+
+	  }
+	  returnQueue.returnReturn(Return(Return::OK));
+	  break;
 	default:
 	  break;
 	}

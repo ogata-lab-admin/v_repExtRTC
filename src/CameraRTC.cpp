@@ -1,13 +1,13 @@
 // -*- C++ -*-
 /*!
- * @file  RangeRTC.cpp
+ * @file  CameraRTC.cpp
  * @brief Simulator Robot RTC for VREP simulator
  * @date 2014/06/05
  * @author Yuki Suga (ysuga@ysuga.net)
  * @copyright 2014, Ogata Laboratory, Waseda University
  */
 
-#include "RangeRTC.h"
+#include "CameraRTC.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -15,10 +15,10 @@
 #include <v_repLib.h>
 // Module specification
 // <rtc-template block="module_spec">
-static const char* rangertc_spec[] =
+static const char* camerartc_spec[] =
   {
-    "implementation_id", "RangeRTC",
-    "type_name",         "RangeRTC",
+    "implementation_id", "CameraRTC",
+    "type_name",         "CameraRTC",
     "description",       "Simulator Robot RTC",
     "version",           "1.0.0",
     "vendor",            "ysuga_net",
@@ -46,10 +46,10 @@ static const char* rangertc_spec[] =
  * @brief constructor
  * @param manager Maneger Object
  */
-RangeRTC::RangeRTC(RTC::Manager* manager)
+CameraRTC::CameraRTC(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
-    m_rangeOut("range", m_range)
+    m_imageOut("camera", m_image)
     // </rtc-template>
 {
 }
@@ -57,20 +57,20 @@ RangeRTC::RangeRTC(RTC::Manager* manager)
 /*!
  * @brief destructor
  */
-RangeRTC::~RangeRTC()
+CameraRTC::~CameraRTC()
 {
 }
 
 
 
-RTC::ReturnCode_t RangeRTC::onInitialize()
+RTC::ReturnCode_t CameraRTC::onInitialize()
 {
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
 
   // Set OutPort buffer
-  addOutPort("range", m_rangeOut);
+  addOutPort("image", m_imageOut);
 
   // Set service provider to Ports
   
@@ -83,9 +83,10 @@ RTC::ReturnCode_t RangeRTC::onInitialize()
   // <rtc-template block="bind_config">
   // Bind variables and configuration variable
   bindParameter("objectName", m_objectName, "none");
-  bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
+  //bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
   // </rtc-template>
 
+  /**
   std::string tubehandle = m_properties.getProperty("conf.__innerparam.tubeHandle");
   std::istringstream iss0(tubehandle);
   iss0 >> m_tubeHandle;
@@ -97,37 +98,37 @@ RTC::ReturnCode_t RangeRTC::onInitialize()
   std::istringstream iss2(buflength);
   iss2 >> m_bufferSize;
   m_pBuffer = new uint8_t[m_bufferSize];
-  
+  */
   return RTC::RTC_OK;
 }
 
  
-RTC::ReturnCode_t RangeRTC::onFinalize()
+RTC::ReturnCode_t CameraRTC::onFinalize()
 {
-  delete[] m_pBuffer;
-  m_pBuffer = NULL;
+  //delete[] m_pBuffer;
+  //m_pBuffer = NULL;
   return RTC::RTC_OK;
 }
 
 
 /*
-RTC::ReturnCode_t RangeRTC::onStartup(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onStartup(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 /*
-RTC::ReturnCode_t RangeRTC::onShutdown(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onShutdown(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 
-RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onActivated(RTC::UniqueId ec_id)
 {
-
+  /*
   std::string names = m_offsetStr;
   std::cout << "offset:" << names << std::endl;
   std::stringstream nss(names);
@@ -148,18 +149,18 @@ RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
     return RTC::RTC_ERROR;
   }
 
-  m_range.geometry.geometry.pose.position.x = values[0];
-  m_range.geometry.geometry.pose.position.y = values[1];
-  m_range.geometry.geometry.pose.position.z = values[2];
-  m_range.geometry.geometry.pose.orientation.r = values[3];
-  m_range.geometry.geometry.pose.orientation.p = values[4];
-  m_range.geometry.geometry.pose.orientation.y = values[5];
-
+  m_camera.geometry.geometry.pose.position.x = values[0];
+  m_camera.geometry.geometry.pose.position.y = values[1];
+  m_camera.geometry.geometry.pose.position.z = values[2];
+  m_camera.geometry.geometry.pose.orientation.r = values[3];
+  m_camera.geometry.geometry.pose.orientation.p = values[4];
+  m_camera.geometry.geometry.pose.orientation.y = values[5];
+  */
   return RTC::RTC_OK;
 }
 
 
-RTC::ReturnCode_t RangeRTC::onDeactivated(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onDeactivated(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
@@ -170,8 +171,9 @@ union float_byte {
   unsigned char byte_value[4];
 };
 
-RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onExecute(RTC::UniqueId ec_id)
 {
+  /*
   simInt bufSize;
   simChar* pBuffer = simTubeRead(m_tubeHandle, &bufSize);
   //std::cout << "ret == " << bufSize << std::endl;
@@ -183,13 +185,13 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
   int data_size = bufSize / 4;
   int ray_size = data_size / 3;
 
-  float time = simGetSimulationTime();
+  float time =  simGetSimulationTime();
   long sec = floor(time);
   long nsec = (time - sec) * 1000*1000*1000;
-  m_range.tm.sec = sec;
-  m_range.tm.nsec = nsec;
-  if(ray_size != m_range.ranges.length()) {
-    m_range.ranges.length(ray_size);
+  m_camera.tm.sec = sec;
+  m_camera.tm.nsec = nsec;
+  if(ray_size != m_camera.cameras.length()) {
+    m_camera.cameras.length(ray_size);
   }
 
   for(int i = 0;i < ray_size;i++) {
@@ -207,49 +209,49 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
     //std::cout << " --- " << distance << "/rad=" << angle << ", deg=" << angle / 3.1415926 * 180.0 << std::endl;
 
     if (i == 0) { //start angle
-      m_range.config.minAngle = angle;
+      m_camera.config.minAngle = angle;
     } else if (i == ray_size-1) {
-      m_range.config.maxAngle = angle;
-      m_range.config.angularRes = (m_range.config.maxAngle - m_range.config.minAngle) / (ray_size-1);
+      m_camera.config.maxAngle = angle;
+      m_camera.config.angularRes = (m_camera.config.maxAngle - m_camera.config.minAngle) / (ray_size-1);
     }
-    m_range.ranges[i] = distance;
+    m_camera.cameras[i] = distance;
   }
 
-  m_rangeOut.write();
-  
+  m_cameraOut.write();
+  */
   return RTC::RTC_OK;
 }
 
 /*
-RTC::ReturnCode_t RangeRTC::onAborting(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onAborting(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 /*
-RTC::ReturnCode_t RangeRTC::onError(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onError(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 /*
-RTC::ReturnCode_t RangeRTC::onReset(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onReset(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 /*
-RTC::ReturnCode_t RangeRTC::onStateUpdate(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onStateUpdate(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
 */
 
 /*
-RTC::ReturnCode_t RangeRTC::onRateChanged(RTC::UniqueId ec_id)
+RTC::ReturnCode_t CameraRTC::onRateChanged(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
@@ -260,12 +262,12 @@ RTC::ReturnCode_t RangeRTC::onRateChanged(RTC::UniqueId ec_id)
 extern "C"
 {
  
-  void RangeRTCInit(RTC::Manager* manager)
+  void CameraRTCInit(RTC::Manager* manager)
   {
-    coil::Properties profile(rangertc_spec);
+    coil::Properties profile(camerartc_spec);
     manager->registerFactory(profile,
-                             RTC::Create<RangeRTC>,
-                             RTC::Delete<RangeRTC>);
+                             RTC::Create<CameraRTC>,
+                             RTC::Delete<CameraRTC>);
   }
   
 };

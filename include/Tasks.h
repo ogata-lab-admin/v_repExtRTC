@@ -22,6 +22,7 @@ class Task {
     STOP = 1,
     SPAWNROBOT = 2,
     SPAWNRANGE = 3,
+    SPAWNCAMERA = 4,
   };
   int value;
   std::string key;
