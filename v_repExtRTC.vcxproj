@@ -12,16 +12,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\v_repLib.cpp" />
-    <ClCompile Include="v_repExtPluginSkeleton.cpp" />
+    <ClCompile Include="src\CameraRTC.cpp" />
+    <ClCompile Include="src\RangeRTC.cpp" />
+    <ClCompile Include="src\RobotRTC.cpp" />
+    <ClCompile Include="src\RobotRTCContainer.cpp" />
+    <ClCompile Include="src\RTCHelper.cpp" />
+    <ClCompile Include="src\SimulatorStub.cpp" />
+    <ClCompile Include="src\SimulatorSVC_impl.cpp" />
+    <ClCompile Include="src\Tasks.cpp" />
+    <ClCompile Include="src\VREPRTC.cpp" />
+    <ClCompile Include="src\v_repExtRTC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\v_repLib.h" />
-    <ClInclude Include="v_repExtPluginSkeleton.h" />
+    <ClInclude Include="include\v_repExtRTC.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{33B36469-BB1D-952E-927D-166DCF0842A7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>v_repExtPluginSkeleton</RootNamespace>
+    <RootNamespace>v_repExtRTC</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -60,8 +69,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;__WIN32__;_DEBUG;_WINDOWS;_USRDLL;__x86__;__NT__;INCLUDE_stub_in_nt_dll;__OSVERSION__=4;_CRT_SECURE_NO_DEPRECATE;RTC_CORBA_CXXMAPPING11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(OMNI_ROOT)\include;include;$(RTM_ROOT)\rtm\idl;..\include;$(RTM_ROOT)\rtm;$(RTM_ROOT)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,8 +85,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;__WIN32__;__x86__;__NT__;INCLUDE_stub_in_nt_dll;__OSVERSION__=4;_CRT_SECURE_NO_DEPRECATE;RTC_CORBA_CXXMAPPING11;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(OMNI_ROOT)\include;include;$(RTM_ROOT)\rtm\idl;..\include;$(RTM_ROOT)\rtm;$(RTM_ROOT)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,6 +94,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(RTM_ROOT)\bin; $(OMNI_ROOT)\lib\x86_win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RTC110.lib;coil110.lib;omniORB415_rtd.lib;omniDynamic415_rtd.lib;omnithread34_rtd.lib;ws2_32.lib;mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

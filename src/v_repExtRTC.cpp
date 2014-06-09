@@ -117,48 +117,48 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	  std::cout << "Starting Simulation" << std::endl;
 	  ret = simStartSimulation();
 	  if (ret == 0) {
-	    returnQueue.returnReturn(Return(Return::FAILED));
+	    returnQueue.returnReturn(Return(Return::RET_FAILED));
 	  } else if(ret < 0) {
-	    returnQueue.returnReturn(Return(Return::ERROR));
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
-	    returnQueue.returnReturn(Return(Return::OK));
+	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
 	case Task::STOP:
 	  std::cout << "Stopping Simulation" << std::endl;
 	  ret = simStopSimulation();
 	  if (ret == 0) {
-	    returnQueue.returnReturn(Return(Return::FAILED));
+	    returnQueue.returnReturn(Return(Return::RET_FAILED));
 	  } else if(ret < 0) {
-	    returnQueue.returnReturn(Return(Return::ERROR));
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
-	    returnQueue.returnReturn(Return(Return::OK));
+	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
 	case Task::SPAWNROBOT:
 	  if (spawnRobotRTC(t.key) < 0) {
-	    returnQueue.returnReturn(Return(Return::ERROR));
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
-	    returnQueue.returnReturn(Return(Return::OK));
+	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
 	case Task::SPAWNRANGE:
 	  std::cout << "Task::Spawnrange" << std::endl;
 	  if (spawnRangeRTC(t.key) < 0) {
-	    returnQueue.returnReturn(Return(Return::ERROR));
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
 
 	  }
-	  returnQueue.returnReturn(Return(Return::OK));
+	  returnQueue.returnReturn(Return(Return::RET_OK));
 	  break;
 	case Task::SPAWNCAMERA:
 	  std::cout << "Task::SpawnCamera" << std::endl;
 	  if (spawnCameraRTC(t.key) < 0) {
-	    returnQueue.returnReturn(Return(Return::ERROR));
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
 
 	  }
-	  returnQueue.returnReturn(Return(Return::OK));
+	  returnQueue.returnReturn(Return(Return::RET_OK));
 	  break;
 	default:
 	  break;

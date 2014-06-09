@@ -23,6 +23,7 @@ int ManagerRunner::svc() {
   manager->setModuleInitProc(MyModuleInit);
   manager->activateManager();
   manager->runManager(false);
+  return 0;
 }
 
 void MyModuleInit(RTC::Manager* manager)
@@ -93,7 +94,7 @@ int spawnRangeRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
+    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 
@@ -103,7 +104,7 @@ int spawnRangeRTC(std::string& key) {
 
   if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
+    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 
@@ -112,7 +113,7 @@ int spawnRangeRTC(std::string& key) {
   simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
   if (tubeHandle < 0) {
     std::cout << " can not open Tube to " << key << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
+    returnQueue.returnReturn(Return(Return::RET_ERROR));
   }
 
   std::ostringstream arg_oss;
@@ -134,7 +135,7 @@ int spawnCameraRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
+    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 
@@ -177,7 +178,7 @@ int spawnRobotRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
+    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 

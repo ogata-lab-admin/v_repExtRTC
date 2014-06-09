@@ -19,6 +19,8 @@
 #include <rtm/DataInPort.h>
 #include <rtm/DataOutPort.h>
 
+#include <stdint.h>
+
 // Service implementation headers
 // <rtc-template block="service_impl_h">
 

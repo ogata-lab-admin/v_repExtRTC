@@ -47,12 +47,12 @@ class Return {
   int value;
  public:
   enum {
-    INVALID = -1,
-    OK = 0,
-    FAILED = -2,
-    ERROR = -3,
+    RET_INVALID = -1,
+    RET_OK = 0,
+    RET_FAILED = -2,
+    RET_ERROR = -3,
   };
- Return() : value(INVALID) {}
+ Return() : value(RET_INVALID) {}
 
  Return(const int t) : value(t) {}
     
@@ -117,7 +117,7 @@ class ReturnQueue : public std::queue<Return>
 	return r;
       }
     }
-    return Return(Return::INVALID);
+    return Return(Return::RET_INVALID);
   }
 };
 
