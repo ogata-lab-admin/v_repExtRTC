@@ -284,9 +284,9 @@ class CameraRTC
   // </rtc-template>
 
   int m_objectHandle;
-  int m_tubeHandle;
-  int m_bufferSize;
-  uint8_t* m_pBuffer;
+  //int m_tubeHandle;
+  //int m_bufferSize;
+  //uint8_t* m_pBuffer;
 };
 
 

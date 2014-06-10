@@ -94,7 +94,6 @@ int spawnRangeRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 
@@ -104,7 +103,6 @@ int spawnRangeRTC(std::string& key) {
 
   if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 
@@ -113,7 +111,7 @@ int spawnRangeRTC(std::string& key) {
   simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
   if (tubeHandle < 0) {
     std::cout << " can not open Tube to " << key << std::endl;
-    returnQueue.returnReturn(Return(Return::RET_ERROR));
+    return -1;
   }
 
   std::ostringstream arg_oss;
@@ -135,7 +133,12 @@ int spawnCameraRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::RET_ERROR));
+    return -1;
+  }
+
+  simInt objType = simGetObjectType(objHandle);
+  if (objType != sim_object_visionsensor_type) {
+    std::cout << "Object "<<key << "is not Vision Sensor Type." << std::endl;
     return -1;
   }
 
@@ -146,7 +149,6 @@ int spawnCameraRTC(std::string& key) {
 
   if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
     return -1;
   }
 
@@ -155,20 +157,20 @@ int spawnCameraRTC(std::string& key) {
   simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
   if (tubeHandle < 0) {
     std::cout << " can not open Tube to " << key << std::endl;
-    returnQueue.returnReturn(Return(Return::ERROR));
   }
 
+
+  */
   std::ostringstream arg_oss;
-  arg_oss << "RangeRTC?" 
+  arg_oss << "CameraRTC?" 
 	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
 	  << "conf.default.objectName=" << key << "&"
-    ///<< "conf.default.activeJointNames=" << names << "&"
-	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
-	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
-	  << "conf.__innerparam.bufSize=" << bufSize;
+	  << "conf.__innerparam.objectHandle=" << objHandle;// << "&"
+  //<< "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
+  //	  << "conf.__innerparam.bufSize=" << bufSize;
   RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
   robotContainer.push(cmp->getObjRef());
-  */
+
   return 0;
 }
 
@@ -178,7 +180,6 @@ int spawnRobotRTC(std::string& key) {
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
     std::cout << " failed to get object handle." << std::endl;
-    returnQueue.returnReturn(Return(Return::RET_ERROR));
     return -1;
   }
 

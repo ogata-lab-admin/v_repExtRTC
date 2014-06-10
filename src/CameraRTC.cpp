@@ -49,7 +49,7 @@ static const char* camerartc_spec[] =
 CameraRTC::CameraRTC(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
-    m_imageOut("camera", m_image)
+    m_imageOut("image", m_image)
     // </rtc-template>
 {
 }
@@ -86,13 +86,15 @@ RTC::ReturnCode_t CameraRTC::onInitialize()
   //bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
   // </rtc-template>
 
+  std::string objhandle = m_properties.getProperty("conf.__innerparam.objectHandle");
+  std::istringstream iss1(objhandle);
+  iss1 >> m_objectHandle;
+  
   /**
   std::string tubehandle = m_properties.getProperty("conf.__innerparam.tubeHandle");
   std::istringstream iss0(tubehandle);
   iss0 >> m_tubeHandle;
   std::cout << "TubeHandle = " << m_tubeHandle << std::endl;
-  std::string objhandle = m_properties.getProperty("conf.__innerparam.objectHandle");
-  std::istringstream iss1(objhandle);
   iss1 >> m_objectHandle;
   std::string buflength = m_properties.getProperty("conf.__innerparam.bufSize");
   std::istringstream iss2(buflength);
@@ -128,34 +130,20 @@ RTC::ReturnCode_t CameraRTC::onShutdown(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t CameraRTC::onActivated(RTC::UniqueId ec_id)
 {
-  /*
-  std::string names = m_offsetStr;
-  std::cout << "offset:" << names << std::endl;
-  std::stringstream nss(names);
-  std::string token;
-  float value;
-  std::vector<float> values;
-  while(std::getline(nss, token, ',')) {
-    std::stringstream trimmer;
-    trimmer << token;
-    token.clear();
-    trimmer >> value;
-    values.push_back(value);
-  }
-  if (values.size() != 6) {
-    std::cout << "Invalid Value of the String Configuration: geometry_offset." << std::endl;
-    std::cout << "geometry_offset must be \"x, y, z, r, p, y\"" << std::endl;
-    std::cout << "ex., geometry_offset=2.0, 0.0, 1.0, 0.0, 0.0, 3.14159" << std::endl;
+  simInt resolution[2]; // x, y
+  if (simGetVisionSensorResolution(m_objectHandle, resolution) < 0) {
+    std::cout << "Resolution Request Failed." << std::endl;
     return RTC::RTC_ERROR;
   }
 
-  m_camera.geometry.geometry.pose.position.x = values[0];
-  m_camera.geometry.geometry.pose.position.y = values[1];
-  m_camera.geometry.geometry.pose.position.z = values[2];
-  m_camera.geometry.geometry.pose.orientation.r = values[3];
-  m_camera.geometry.geometry.pose.orientation.p = values[4];
-  m_camera.geometry.geometry.pose.orientation.y = values[5];
-  */
+  std::cout << "Camera Resolution Width = " << resolution[0] << std::endl;
+  std::cout << "Camera Resolution Height= " << resolution[1] << std::endl;
+  m_image.width = resolution[0];
+  m_image.height = resolution[1];
+  m_image.bpp = 8*3;
+  m_image.format = "bitmap";
+  m_image.fDiv = 1.0;
+  m_image.pixels.length(m_image.width * m_image.height * 3);
   return RTC::RTC_OK;
 }
 
@@ -165,14 +153,26 @@ RTC::ReturnCode_t CameraRTC::onDeactivated(RTC::UniqueId ec_id)
   return RTC::RTC_OK;
 }
 
-
-union float_byte {
-  float float_value;
-  unsigned char byte_value[4];
-};
-
 RTC::ReturnCode_t CameraRTC::onExecute(RTC::UniqueId ec_id)
 {
+  simFloat* pBuffer = simGetVisionSensorImage(m_objectHandle);
+  if (pBuffer == NULL) {
+    std::cout << "No image received, but no error" << std::endl;
+    return RTC::RTC_OK;
+  }
+
+  for (int i = 0;i < m_image.height;i++) {
+    for (int j = 0;j < m_image.width;j++) {
+      int index = i*m_image.width*3 + j*3; 
+      int buffer_index = (m_image.width * (m_image.height-i-1)) * 3 + j*3;
+      m_image.pixels[buffer_index + 0] = static_cast<unsigned char>(pBuffer[index+2] * 255);
+      m_image.pixels[buffer_index + 1] = static_cast<unsigned char>(pBuffer[index+1] * 255);
+      m_image.pixels[buffer_index + 2] = static_cast<unsigned char>(pBuffer[index+0] * 255);
+    }
+  }
+  m_imageOut.write();
+      
+  
   /*
   simInt bufSize;
   simChar* pBuffer = simTubeRead(m_tubeHandle, &bufSize);
