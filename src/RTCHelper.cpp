@@ -265,20 +265,23 @@ int syncRTC(const std::string& fullpath) {
     double rate = ecList[0]->get_rate();
     std::cout << " --- EC[0]'s rate = " << rate << std::endl;
 
-    std::cout << " --- Creating SynchExtTriggerEC...." << std::endl;
+    std::cout << " --- Creating SynchExtTriggerEC" << std::endl;
     std::ostringstream oss;
     oss << "SynchExtTriggerEC";// << "?" << "exec_cxt.periodic.rate=" << rate;
     ///ExecutionContextBase* pEC = RTC::ExecutionContextFactory::instance().createObject(oss.str().c_str());
     ExecutionContextBase* pEC = RTC::Manager::instance().createContext(oss.str().c_str());
     pEC->setRate(rate);
+    std::cout << " --- Add Component to ExecutionContext." << std::endl;
     RTC::RTObject_ptr rtc_ptr = RTC::RTObject::_narrow(corbaConsumer._ptr());
+    
     RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
     if (r != RTC::RTC_OK) {
       std::cout << " --- addComponent failed." << std::endl;
       return -1;
     }
+    std::cout << " --- Starting ExecutionContext." << std::endl;
     pEC->start();
-    ecList[0]->stop();
+    //ecList[0]->stop();
     robotContainer.push(rtc_ptr, fullpath, pEC);
   } catch (CosNaming::NamingContext::NotFound& e) {
     std::cout << " --- Name resolve failed" << std::endl;
