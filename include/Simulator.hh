@@ -146,8 +146,10 @@ _CORBA_MODULE_BEG
     RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg);
     RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
     RETURN_VALUE killRobotRTC(const char* objectName);
-    RETURN_VALUE getObjectHandle(const char* objectName, ::ssr::OBJECT_HANDLE& handle);
-    RETURN_VALUE getObjectPose(::ssr::OBJECT_HANDLE handle, ::RTC::Pose3D& pose);
+    RETURN_VALUE killAllRobotRTC();
+    RETURN_VALUE getObjectPose(const char* objectName, ::RTC::Pose3D& pose);
+    RETURN_VALUE setObjectPose(const char* objectName, const ::RTC::Pose3D& pose);
+    RETURN_VALUE synchronizeRTC(const char* rtcFullPath);
 
     inline _objref_Simulator()  { _PR_setobj(0); }  // nil
     _objref_Simulator(omniIOR*, omniIdentity*);
@@ -190,8 +192,10 @@ _CORBA_MODULE_BEG
     virtual RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE killRobotRTC(const char* objectName) = 0;
-    virtual RETURN_VALUE getObjectHandle(const char* objectName, ::ssr::OBJECT_HANDLE& handle) = 0;
-    virtual RETURN_VALUE getObjectPose(::ssr::OBJECT_HANDLE handle, ::RTC::Pose3D& pose) = 0;
+    virtual RETURN_VALUE killAllRobotRTC() = 0;
+    virtual RETURN_VALUE getObjectPose(const char* objectName, ::RTC::Pose3D& pose) = 0;
+    virtual RETURN_VALUE setObjectPose(const char* objectName, const ::RTC::Pose3D& pose) = 0;
+    virtual RETURN_VALUE synchronizeRTC(const char* rtcFullPath) = 0;
     
   public:  // Really protected, workaround for xlC
     virtual _CORBA_Boolean _dispatch(omniCallHandle&);

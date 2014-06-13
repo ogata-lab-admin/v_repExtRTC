@@ -51,12 +51,19 @@ module ssr {
 
     /**
      */
-    RETURN_VALUE getObjectHandle(in string objectName, out OBJECT_HANDLE handle);
+    RETURN_VALUE killAllRobotRTC();
 
     /**
      */
-    RETURN_VALUE getObjectPose(in OBJECT_HANDLE handle, out RTC::Pose3D pose);
+    RETURN_VALUE getObjectPose(in string objectName, out RTC::Pose3D pose);
 
+    /**
+     */
+    RETURN_VALUE setObjectPose(in string objectName, in RTC::Pose3D pose);
+
+    /**
+     */
+    RETURN_VALUE synchronizeRTC(in string rtcFullPath);
   };
 
   typedef sequence<string> StringSeq;
@@ -86,4 +93,3 @@ module ssr {
 };
 
 
-  

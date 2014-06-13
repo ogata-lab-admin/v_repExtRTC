@@ -3,7 +3,7 @@
 #include <string>
 #include <queue>
 #include <coil/Mutex.h>
-
+#include <iostream>
 
 class MutexBinder
 {
@@ -23,22 +23,34 @@ class Task {
     SPAWNROBOT = 2,
     SPAWNRANGE = 3,
     SPAWNCAMERA = 4,
+    LOADPROJECT = 5,
+    PAUSE = 6,
+    KILLRTC = 7,
+    KILLALLRTC = 8,
+    SYNCRTC = 9,
+    SETOBJPOSE = 10,
+    GETOBJPOSE = 11,
   };
   int value;
   std::string key;
+  std::string arg;
  public:
  Task(): value(INVALID) {}
 
  Task(const int& v) : value(v) {}
+ Task(const int& v, const std::string& k) : value(v), key(k) {}
+ Task(const int& v, const std::string& k, const std::string& a) : value(v), key(k), arg(a) {}
 
   Task(const Task& t) {
     this->value = t.value;
     this->key = t.key;
+    this->arg = t.arg;
   }
 
   void operator=(const Task& t) {
     this->value = t.value;
     this->key = t.key;
+    this->arg = t.arg;
   }
 };
 

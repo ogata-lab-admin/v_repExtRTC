@@ -85,30 +85,18 @@ RTC::ReturnCode_t CameraRTC::onInitialize()
   bindParameter("objectName", m_objectName, "none");
   //bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
   // </rtc-template>
+  
+  std::cout << " - Initializing Camera: " << m_properties.getProperty("conf.default.objectName") <<  std::endl;
 
   std::string objhandle = m_properties.getProperty("conf.__innerparam.objectHandle");
   std::istringstream iss1(objhandle);
   iss1 >> m_objectHandle;
-  
-  /**
-  std::string tubehandle = m_properties.getProperty("conf.__innerparam.tubeHandle");
-  std::istringstream iss0(tubehandle);
-  iss0 >> m_tubeHandle;
-  std::cout << "TubeHandle = " << m_tubeHandle << std::endl;
-  iss1 >> m_objectHandle;
-  std::string buflength = m_properties.getProperty("conf.__innerparam.bufSize");
-  std::istringstream iss2(buflength);
-  iss2 >> m_bufferSize;
-  m_pBuffer = new uint8_t[m_bufferSize];
-  */
   return RTC::RTC_OK;
 }
 
  
 RTC::ReturnCode_t CameraRTC::onFinalize()
 {
-  //delete[] m_pBuffer;
-  //m_pBuffer = NULL;
   return RTC::RTC_OK;
 }
 
@@ -130,14 +118,15 @@ RTC::ReturnCode_t CameraRTC::onShutdown(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t CameraRTC::onActivated(RTC::UniqueId ec_id)
 {
+  std::cout << " - Activating CameraRTC: " << m_objectName << std::endl;
   simInt resolution[2]; // x, y
   if (simGetVisionSensorResolution(m_objectHandle, resolution) < 0) {
-    std::cout << "Resolution Request Failed." << std::endl;
+    std::cout << " -- Resolution Request Failed." << std::endl;
     return RTC::RTC_ERROR;
   }
 
-  std::cout << "Camera Resolution Width = " << resolution[0] << std::endl;
-  std::cout << "Camera Resolution Height= " << resolution[1] << std::endl;
+  std::cout << " -- Camera Resolution Width = " << resolution[0] << std::endl;
+  std::cout << " -- Camera Resolution Height= " << resolution[1] << std::endl;
   m_image.width = resolution[0];
   m_image.height = resolution[1];
   m_image.bpp = 8*3;
@@ -157,7 +146,7 @@ RTC::ReturnCode_t CameraRTC::onExecute(RTC::UniqueId ec_id)
 {
   simFloat* pBuffer = simGetVisionSensorImage(m_objectHandle);
   if (pBuffer == NULL) {
-    std::cout << "No image received, but no error" << std::endl;
+    std::cout << " -- ERROR, CameraRTC::No image received, but no error" << std::endl;
     return RTC::RTC_OK;
   }
 

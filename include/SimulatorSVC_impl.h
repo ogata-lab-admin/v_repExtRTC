@@ -46,9 +46,10 @@ class SimulatorSVC_impl
    ssr::RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE killRobotRTC(const char* objectName);
-  ssr::RETURN_VALUE getObjectHandle(const char* objectName, ssr::OBJECT_HANDLE& handle);
-  ssr::RETURN_VALUE getObjectPose(ssr::OBJECT_HANDLE handle, RTC::Pose3D& pose);
-
+  ssr::RETURN_VALUE killAllRobotRTC();
+  ssr::RETURN_VALUE getObjectPose(const char* objectName, RTC::Pose3D& pose);
+  ssr::RETURN_VALUE setObjectPose(const char* objectName, const ::RTC::Pose3D& pose);
+  ssr::RETURN_VALUE synchronizeRTC(const char* rtcFullPath);
 };
 
 /*!

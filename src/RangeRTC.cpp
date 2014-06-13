@@ -86,10 +86,13 @@ RTC::ReturnCode_t RangeRTC::onInitialize()
   bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
   // </rtc-template>
 
+
+  std::cout << " - Initializing RangeRTC: " << m_properties.getProperty("conf.default.objectName") << std::endl;
+
   std::string tubehandle = m_properties.getProperty("conf.__innerparam.tubeHandle");
   std::istringstream iss0(tubehandle);
   iss0 >> m_tubeHandle;
-  std::cout << "TubeHandle = " << m_tubeHandle << std::endl;
+  std::cout << " -- TubeHandle = " << m_tubeHandle << std::endl;
   std::string objhandle = m_properties.getProperty("conf.__innerparam.objectHandle");
   std::istringstream iss1(objhandle);
   iss1 >> m_objectHandle;
@@ -127,9 +130,9 @@ RTC::ReturnCode_t RangeRTC::onShutdown(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
 {
-
+  std::cout << " - Activating RangeRTC: " << m_objectName << std::endl;
   std::string names = m_offsetStr;
-  std::cout << "offset:" << names << std::endl;
+  std::cout << " -- geometry_offset:" << names << std::endl;
   std::stringstream nss(names);
   std::string token;
   float value;
@@ -142,9 +145,9 @@ RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
     values.push_back(value);
   }
   if (values.size() != 6) {
-    std::cout << "Invalid Value of the String Configuration: geometry_offset." << std::endl;
-    std::cout << "geometry_offset must be \"x, y, z, r, p, y\"" << std::endl;
-    std::cout << "ex., geometry_offset=2.0, 0.0, 1.0, 0.0, 0.0, 3.14159" << std::endl;
+    std::cout << " -- Invalid Value of the String Configuration: geometry_offset." << std::endl;
+    std::cout << " -- geometry_offset must be \"x, y, z, r, p, y\"" << std::endl;
+    std::cout << " -- ex., geometry_offset=2.0, 0.0, 1.0, 0.0, 0.0, 3.14159" << std::endl;
     return RTC::RTC_ERROR;
   }
 
@@ -176,7 +179,7 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
   simChar* pBuffer = simTubeRead(m_tubeHandle, &bufSize);
   //std::cout << "ret == " << bufSize << std::endl;
   if (pBuffer == NULL) {
-    std::cout << "NULL!!" << std::endl;
+    // std::cout << " - RangeData: NULL. But this is not error." << std::endl;
     return RTC::RTC_OK;
   }
   float_byte buffer;

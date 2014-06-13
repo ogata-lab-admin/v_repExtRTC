@@ -22,10 +22,12 @@ public:
 
 bool initRTM();
 bool exitRTM();
-int spawnRobotRTC(std::string& key);
-int spawnRangeRTC(std::string& key);
-int spawnCameraRTC(std::string& key);
+int spawnRobotRTC(std::string& key, std::string& arg);
+int spawnRangeRTC(std::string& key, std::string& arg);
+int spawnCameraRTC(std::string& key, std::string& arg);
 void startRTCs();
 void stopRTCs();
 void tickRTCs(const float interval);
-
+int killRTC(const std::string& key);
+int killAllRTC();
+int syncRTC(const std::string& fullpath);

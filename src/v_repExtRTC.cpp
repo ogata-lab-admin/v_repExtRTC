@@ -114,7 +114,7 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	simInt ret;
 	switch(t.value){
 	case Task::START:
-	  std::cout << "Starting Simulation" << std::endl;
+	  std::cout << " - Task::Starting Simulation" << std::endl;
 	  ret = simStartSimulation();
 	  if (ret == 0) {
 	    returnQueue.returnReturn(Return(Return::RET_FAILED));
@@ -125,7 +125,7 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	  }
 	  break;
 	case Task::STOP:
-	  std::cout << "Stopping Simulation" << std::endl;
+	  std::cout << " - Task::Stopping Simulation" << std::endl;
 	  ret = simStopSimulation();
 	  if (ret == 0) {
 	    returnQueue.returnReturn(Return(Return::RET_FAILED));
@@ -135,40 +135,95 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
+	case Task::PAUSE:
+	  std::cout << " - Task::Pausing Simulation" << std::endl;
+	  ret = simPauseSimulation();
+	  if (ret == 0) {
+	    returnQueue.returnReturn(Return(Return::RET_FAILED));
+	  } else if(ret < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+	  break;
+	case Task::LOADPROJECT:
+	  std::cout << " - Task::Loading Project: " << t.key.c_str() << std::endl;
+	  ret = simLoadScene(t.key.c_str());
+	  std::cout << " -- ret = " << ret;
+	  if (ret < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+	  break;
 	case Task::SPAWNROBOT:
-	  if (spawnRobotRTC(t.key) < 0) {
+	  std::cout << " - Task::SpawnRobot" << std::endl;
+	  if (spawnRobotRTC(t.key, t.arg) < 0) {
 	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
 	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
 	case Task::SPAWNRANGE:
-	  std::cout << "Task::Spawnrange" << std::endl;
-	  if (spawnRangeRTC(t.key) < 0) {
+	  std::cout << " - Task::Spawnrange" << std::endl;
+	  if (spawnRangeRTC(t.key, t.arg) < 0) {
 	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
-
+	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
-	  returnQueue.returnReturn(Return(Return::RET_OK));
+
 	  break;
 	case Task::SPAWNCAMERA:
-	  std::cout << "Task::SpawnCamera" << std::endl;
-	  if (spawnCameraRTC(t.key) < 0) {
+	  std::cout << " - Task::SpawnCamera" << std::endl;
+	  if (spawnCameraRTC(t.key, t.arg) < 0) {
 	    returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  } else {
-
+	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
+
+	  break;
+	case Task::KILLRTC:
+	  std::cout << " - Task::KillRTC" << std::endl;
+	  if (killRTC(t.key) < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+	  break;
+	case Task::KILLALLRTC:
+	  std::cout << " - Task::KillAllRTC" << std::endl;
+	  if (killAllRTC() < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+	  break;
+	case Task::SYNCRTC:
+	  std::cout << " - Task::SYNCRTC" << std::endl;
+	  if (syncRTC(t.key) < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+	  break;
+	case Task::GETOBJPOSE:
 	  returnQueue.returnReturn(Return(Return::RET_OK));
 	  break;
+
+	case Task::SETOBJPOSE:
+	  returnQueue.returnReturn(Return(Return::RET_OK));
+	  break;
+	  
 	default:
+	  //returnQueue.returnReturn(Return(Return::RET_ERROR));
 	  break;
 	}
 
 	if (message==sim_message_eventcallback_mainscriptabouttobecalled)
 	{ // The main script is about to be run (only called while a simulation is running (and not paused!))
 	  
-	       //  main script is called every dynamics calculation. 
-	        tickRTCs(0.050);
+	  //  main script is called every dynamics calculation. 
+	  tickRTCs(0.050);
 	}
 	if (message==sim_message_eventcallback_simulationabouttostart)
 	{ // Simulation is about to start
