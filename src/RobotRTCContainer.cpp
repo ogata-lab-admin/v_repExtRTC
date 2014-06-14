@@ -9,11 +9,13 @@ RobotRTCHolder::RobotRTCHolder(RTC::RTObject_ptr pRTC, const std::string& name, 
   m_objectName = name;
   m_pECBase = pEC;
   if (pEC) {
+    m_simulatorRTC = false;
     m_pEC = OpenRTM::ExtTrigExecutionContextService::_narrow(pEC->getObjRef());
     if (!m_pEC) {
       std::cout << " -- Given Extra Execution Context is not ExtTrigExecutionContext. Failed." << std::endl;
     }
   } else {
+    m_simulatorRTC = true;
     std::cout << " -- ExtraEC is nil. Default EC[0] is used." << std::endl;
     RTC::ExecutionContext_ptr p = m_pRTC->get_context(0);
     m_pEC = OpenRTM::ExtTrigExecutionContextService::_narrow(p);
@@ -29,6 +31,7 @@ RobotRTCHolder::RobotRTCHolder(const RobotRTCHolder& h) {
   m_pEC = OpenRTM::ExtTrigExecutionContextService::_duplicate(h.m_pEC);
   m_pECBase = h.m_pECBase;
   m_objectName = h.m_objectName;
+  m_simulatorRTC = h.m_simulatorRTC;
   init();
 }
 

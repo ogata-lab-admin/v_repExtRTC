@@ -30,6 +30,7 @@ class Task {
     SYNCRTC = 9,
     SETOBJPOSE = 10,
     GETOBJPOSE = 11,
+    GETSYNCRTC = 12,
   };
   int value;
   std::string key;
@@ -64,6 +65,10 @@ class Return {
     RET_FAILED = -2,
     RET_ERROR = -3,
   };
+
+  std::vector<std::string> stringList;
+ public:
+
  Return() : value(RET_INVALID) {}
 
  Return(const int t) : value(t) {}
@@ -71,12 +76,15 @@ class Return {
 
   Return(const Return& t) {
     this->value = t.value;
+    std::copy(t.stringList.begin(), t.stringList.end(), back_inserter(this->stringList) );
   }
 
   void operator=(const Return& t) {
     this->value = t.value;
+    std::copy(t.stringList.begin(), t.stringList.end(), back_inserter(this->stringList) );
   }
 
+  
 };
 
 

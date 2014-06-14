@@ -10,6 +10,7 @@
  */
 class RobotRTCHolder {
  private:
+  bool m_simulatorRTC;
   std::string m_objectName;
   RTC::RTObject_ptr m_pRTC;
   OpenRTM::ExtTrigExecutionContextService_var m_pEC;
@@ -20,8 +21,10 @@ class RobotRTCHolder {
 
   const std::string& getObjectName() {return m_objectName; }
 
+  bool isSimulatorRTC() {return m_simulatorRTC;}
+
  public:
- RobotRTCHolder() : m_pRTC(NULL) {}
+ RobotRTCHolder() : m_simulatorRTC(true), m_pRTC(NULL) {}
 
   RobotRTCHolder(RTC::RTObject_ptr pRTC, const std::string& name, RTC::ExecutionContextBase* pEC=NULL);
 
@@ -29,6 +32,7 @@ class RobotRTCHolder {
 
   void operator=(const RobotRTCHolder& h) {
     m_pRTC = RTC::RTObject::_duplicate(h.m_pRTC);
+    m_simulatorRTC = h.m_simulatorRTC;
     m_pEC = OpenRTM::ExtTrigExecutionContextService::_duplicate(h.m_pEC);
     m_pECBase = h.m_pECBase;
     m_objectName = h.m_objectName;
@@ -63,8 +67,15 @@ class RobotRTCContainer : public std::vector<RobotRTCHolder> {
   ~RobotRTCContainer() {}
 
  public:
-  void push(RTObject_ptr pRTC, const std::string& objectName, RTC::ExecutionContextBase* pEC=NULL) {
+  bool push(RTObject_ptr pRTC, const std::string& objectName, RTC::ExecutionContextBase* pEC=NULL) {
+    RobotRTCContainer::iterator it = this->begin();
+    for(;it != end();++it) {
+      if ((*it).getObjectName() == objectName) {
+	return false;
+      }
+    }
     this->push_back(RobotRTCHolder(pRTC, objectName, pEC));
+    return true;
   }
 
   void start() {

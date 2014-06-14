@@ -206,6 +206,21 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	    returnQueue.returnReturn(Return(Return::RET_OK));
 	  }
 	  break;
+	case Task::GETSYNCRTC:
+	  std::cout << " - Task::GETSYNCRTC" << std::endl;
+	  {
+	    Return r(Return::RET_OK);
+	    if (getSyncRTCs(r.stringList) < 0) {
+	      r.value = Return::RET_ERROR;
+	      returnQueue.returnReturn(r);
+	    } else {
+	      for(int i = 0;i < r.stringList.size();i++) {
+		std::cout << " - Task: " << r.stringList[i] << std::endl;
+	      }
+	      returnQueue.returnReturn(r);
+	    }
+	  }
+	  break;
 	case Task::GETOBJPOSE:
 	  returnQueue.returnReturn(Return(Return::RET_OK));
 	  break;

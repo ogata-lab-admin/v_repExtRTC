@@ -31,3 +31,4 @@ void tickRTCs(const float interval);
 int killRTC(const std::string& key);
 int killAllRTC();
 int syncRTC(const std::string& fullpath);
+int getSyncRTCs(std::vector<std::string>& strList);

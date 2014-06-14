@@ -50,6 +50,10 @@ class SimulatorSVC_impl
   ssr::RETURN_VALUE getObjectPose(const char* objectName, RTC::Pose3D& pose);
   ssr::RETURN_VALUE setObjectPose(const char* objectName, const ::RTC::Pose3D& pose);
   ssr::RETURN_VALUE synchronizeRTC(const char* rtcFullPath);
+  ssr::RETURN_VALUE getSynchronizingRTCs(::ssr::StringSeq_out fullPaths);
+  ssr::RETURN_VALUE getSimulationTimeStep(::CORBA::Float& timeStep);
+  ssr::RETURN_VALUE getSimulationTime(::CORBA::Float& time);
+
 };
 
 /*!

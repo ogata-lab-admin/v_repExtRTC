@@ -91,34 +91,60 @@ ssr::RETURN_VALUE SimulatorSVC_impl::spawnCameraRTC(const char* objectName, cons
 
 ssr::RETURN_VALUE SimulatorSVC_impl::killRobotRTC(const char* objectName)
 {
-
   taskQueue.pushTask(Task(Task::KILLRTC, objectName));
   return returnCheck(returnQueue.waitReturn());
 }
 
 ssr::RETURN_VALUE SimulatorSVC_impl::killAllRobotRTC()
 {
-  std::cout << "SimulatorSVC_impl::killAllRobotRTC" << std::endl;
   taskQueue.pushTask(Task(Task::KILLALLRTC));
   return returnCheck(returnQueue.waitReturn());
 }
 
 ssr::RETURN_VALUE SimulatorSVC_impl::getObjectPose(const char* objectName, RTC::Pose3D& pose)
 {
-  taskQueue.pushTask(Task(Task::GETOBJPOSE, objectName));
-  return returnCheck(returnQueue.waitReturn());
+  return ssr::RETVAL_NOT_IMPLEMENTED;
+  //taskQueue.pushTask(Task(Task::GETOBJPOSE, objectName));
+  //return returnCheck(returnQueue.waitReturn());
 }
 
 
 ssr::RETURN_VALUE SimulatorSVC_impl::setObjectPose(const char* objectName, const RTC::Pose3D& pose)
 {
-  taskQueue.pushTask(Task(Task::SETOBJPOSE, objectName));
-  return returnCheck(returnQueue.waitReturn());
+  return ssr::RETVAL_NOT_IMPLEMENTED;
+  //taskQueue.pushTask(Task(Task::SETOBJPOSE, objectName));
+  //return returnCheck(returnQueue.waitReturn());
 }
 
 ssr::RETURN_VALUE SimulatorSVC_impl::synchronizeRTC(const char* rtcFullPath) {
   taskQueue.pushTask(Task(Task::SYNCRTC, rtcFullPath));
   return returnCheck(returnQueue.waitReturn());
+}
+
+
+ssr::RETURN_VALUE SimulatorSVC_impl::getSynchronizingRTCs(::ssr::StringSeq_out fullPaths) {
+  taskQueue.pushTask(Task(Task::GETSYNCRTC));
+  fullPaths = new ::ssr::StringSeq();
+  Return r = returnQueue.waitReturn();
+  if (r.value == Return::RET_OK) {
+    std::cout << "OK" << std::endl;
+    fullPaths->length(r.stringList.size());
+    for (int i = 0;i < r.stringList.size();i++) {
+      std::cout << " --- SynchroRTC: " << r.stringList[i] << std::endl;
+      fullPaths[i] = ::CORBA::string_dup(r.stringList[i].c_str());
+    }
+  }
+  return returnCheck(r);
+}
+
+ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTimeStep(::CORBA::Float& timeStep) {
+  timeStep = 0;
+  return ssr::RETVAL_NOT_IMPLEMENTED;
+}
+
+ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTime(::CORBA::Float& time) {
+  time = 0;
+  return ssr::RETVAL_NOT_IMPLEMENTED;
 }
 
 // End of example implementational code
@@ -150,7 +176,6 @@ ssr::RETURN_VALUE SimulatedRobotSVC_impl::getJointTagNames(ssr::StringSeq_out ta
 #endif
   return result;
 }
-
 
 
 // End of example implementational code

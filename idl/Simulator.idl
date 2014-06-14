@@ -6,10 +6,13 @@ module ssr {
   enum RETURN_VALUE {
     RETVAL_OK,
     RETVAL_INVALID_PRECONDITION,
+    RETVAL_OBJECT_NOT_FOUND,
+    RETVAL_NOT_IMPLEMENTED,
     RETVAL_UNKNOWN_ERROR
   };
 
   typedef long OBJECT_HANDLE;
+  typedef sequence<string> StringSeq;
 
   interface Simulator {
 
@@ -64,9 +67,23 @@ module ssr {
     /**
      */
     RETURN_VALUE synchronizeRTC(in string rtcFullPath);
+
+    /**
+     */
+    RETURN_VALUE getSynchronizingRTCs(out StringSeq fullPaths);
+
+    /**
+     */
+    RETURN_VALUE getSimulationTimeStep(out float timeStep);
+
+    /**
+     */
+    RETURN_VALUE getSimulationTime(out float time);
+
+    
   };
 
-  typedef sequence<string> StringSeq;
+
 
   interface SimulatedRobot {
     
