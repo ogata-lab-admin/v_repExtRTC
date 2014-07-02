@@ -15,6 +15,8 @@
 
 using namespace RTC;
 
+SimulatorClock simulatorClock;
+
 ManagerRunner* pRunner;
 void MyModuleInit(RTC::Manager* manager);
 
@@ -62,6 +64,7 @@ void MyModuleInit(RTC::Manager* manager)
 
 bool initRTM() {
   pRunner = new ManagerRunner();
+
   return true;
 }
 

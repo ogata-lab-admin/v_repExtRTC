@@ -10,6 +10,8 @@
 
 extern TaskQueue taskQueue;
 extern ReturnQueue returnQueue;
+extern SimulatorClock simulatorClock;
+
 /*
  * Example implementational code for IDL interface ssr::Simulator
  */
@@ -127,24 +129,36 @@ ssr::RETURN_VALUE SimulatorSVC_impl::getSynchronizingRTCs(::ssr::StringSeq_out f
   fullPaths = new ::ssr::StringSeq();
   Return r = returnQueue.waitReturn();
   if (r.value == Return::RET_OK) {
-    std::cout << "OK" << std::endl;
     fullPaths->length(r.stringList.size());
     for (int i = 0;i < r.stringList.size();i++) {
-      std::cout << " --- SynchroRTC: " << r.stringList[i] << std::endl;
       fullPaths[i] = ::CORBA::string_dup(r.stringList[i].c_str());
     }
   }
   return returnCheck(r);
 }
 
-ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTimeStep(::CORBA::Float& timeStep) {
-  timeStep = 0;
-  return ssr::RETVAL_NOT_IMPLEMENTED;
+ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTimeStep(::CORBA::Float& timeStep) 
+{
+  //taskQueue.pushTask(Task(Task::GETSIMSTEP));
+  //Return r = returnQueue.waitReturn();
+  //  if (r.value == Return::RET_OK) {
+  //    timeStep = r.floatValue;
+  //  }
+  timeStep = simulatorClock.getSimulationTimeStep();
+  //  return returnCheck(r);
+  return ssr::RETVAL_OK;
 }
 
 ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTime(::CORBA::Float& time) {
-  time = 0;
-  return ssr::RETVAL_NOT_IMPLEMENTED;
+  /*
+  taskQueue.pushTask(Task(Task::GETSIMTIME));
+  Return r = returnQueue.waitReturn();
+  if (r.value == Return::RET_OK) {
+    time = r.floatValue;
+  }
+  */
+  time = simulatorClock.getSimulationTime();
+  return ssr::RETVAL_OK;
 }
 
 // End of example implementational code

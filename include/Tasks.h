@@ -31,6 +31,8 @@ class Task {
     SETOBJPOSE = 10,
     GETOBJPOSE = 11,
     GETSYNCRTC = 12,
+    GETSIMTIME = 13,
+    GETSIMSTEP = 14,
   };
   int value;
   std::string key;
@@ -67,6 +69,7 @@ class Return {
   };
 
   std::vector<std::string> stringList;
+  float floatValue;
  public:
 
  Return() : value(RET_INVALID) {}
@@ -76,11 +79,13 @@ class Return {
 
   Return(const Return& t) {
     this->value = t.value;
+    floatValue = t.floatValue;
     std::copy(t.stringList.begin(), t.stringList.end(), back_inserter(this->stringList) );
   }
 
   void operator=(const Return& t) {
     this->value = t.value;
+    floatValue = t.floatValue;
     std::copy(t.stringList.begin(), t.stringList.end(), back_inserter(this->stringList) );
   }
 

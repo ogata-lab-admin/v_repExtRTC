@@ -81,6 +81,7 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
 	// etc.
 
 	initRTM();
+	simulatorClock.setSimulationTimeStep(simGetSimulationTimeStep());
 
 	return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
 }
@@ -94,21 +95,7 @@ VREP_DLLEXPORT void v_repEnd()
 }
 
 
-
-// This is the plugin messaging routine (i.e. V-REP calls this function very often, with various messages):
-VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData)
-{ // This is called quite often. Just watch out for messages/events you want to handle
-	// Keep following 5 lines at the beginning and unchanged:
-        //static bool refreshDlgFlag=true;
-	int errorModeSaved;
-	simGetIntegerParameter(sim_intparam_error_report_mode,&errorModeSaved);
-	simSetIntegerParameter(sim_intparam_error_report_mode,sim_api_errormessage_ignore);
-	void* retVal=NULL;
-
-	// Here we can intercept many messages from V-REP (actually callbacks). Only the most important messages are listed here.
-	// For a complete list of messages that you can intercept/react with, search for "sim_message_eventcallback"-type constants
-	// in the V-REP user manual.
-	
+void message_pump() {
 	// Task Queue Check for unsynchronized task thrown from Service Port of RT-Component.
 	Task t = taskQueue.popTask();
 	simInt ret;
@@ -221,6 +208,22 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	    }
 	  }
 	  break;
+	case Task::GETSIMTIME:
+	  std::cout << " - Task::GETSIMTIME" << std::endl;
+	  {
+	    Return r(Return::RET_OK);
+	    r.floatValue = simGetSimulationTime();
+	    returnQueue.returnReturn(r);
+	  }
+	  break;
+	case Task::GETSIMSTEP:
+	  std::cout << " - Task::GETSIMSTEP" << std::endl;
+	  {
+	    Return r(Return::RET_OK);
+	    r.floatValue = simGetSimulationTimeStep();
+	    returnQueue.returnReturn(r);
+	  }
+	  break;
 	case Task::GETOBJPOSE:
 	  returnQueue.returnReturn(Return(Return::RET_OK));
 	  break;
@@ -234,6 +237,23 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	  break;
 	}
 
+
+}
+
+// This is the plugin messaging routine (i.e. V-REP calls this function very often, with various messages):
+VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData)
+{ // This is called quite often. Just watch out for messages/events you want to handle
+	// Keep following 5 lines at the beginning and unchanged:
+        //static bool refreshDlgFlag=true;
+	int errorModeSaved;
+	simGetIntegerParameter(sim_intparam_error_report_mode,&errorModeSaved);
+	simSetIntegerParameter(sim_intparam_error_report_mode,sim_api_errormessage_ignore);
+	void* retVal=NULL;
+
+	// Here we can intercept many messages from V-REP (actually callbacks). Only the most important messages are listed here.
+	// For a complete list of messages that you can intercept/react with, search for "sim_message_eventcallback"-type constants
+	// in the V-REP user manual.
+	
 	if (message==sim_message_eventcallback_mainscriptabouttobecalled)
 	{ // The main script is about to be run (only called while a simulation is running (and not paused!))
 	  
@@ -242,6 +262,8 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	}
 	if (message==sim_message_eventcallback_simulationabouttostart)
 	{ // Simulation is about to start
+	  simulatorClock.setSimulationTimeStep(simGetSimulationTimeStep());
+	  //simulatorClock.setSimulationTime(simGetSimulationTime());
 	  startRTCs();
 	}
 
@@ -249,7 +271,8 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	{ // Simulation just ended
 	  stopRTCs();
 	}
-
+	simulatorClock.setSimulationTime(simGetSimulationTime());
+	message_pump();
 	// Keep following unchanged:
 	simSetIntegerParameter(sim_intparam_error_report_mode,errorModeSaved); // restore previous settings
 	return(retVal);

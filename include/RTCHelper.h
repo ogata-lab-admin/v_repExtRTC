@@ -4,6 +4,27 @@
 #include "Tasks.h"
 #include "RobotRTCContainer.h"
 
+class SimulatorClock {
+ private:
+  float time;
+  float timeStep;
+ public:
+
+ SimulatorClock() : time(0.0), timeStep(0.05) {}
+  ~SimulatorClock() {}
+
+ public:
+  float getSimulationTime() {return time;}
+  void setSimulationTime(const float time) {
+    this->time = time;
+  }
+
+  float getSimulationTimeStep() {return timeStep;}
+  void setSimulationTimeStep(const float timeStep) {
+    this->timeStep = timeStep;
+  }
+};
+
 class ManagerRunner : public coil::Task {
 public:
   ManagerRunner() {
@@ -32,3 +53,6 @@ int killRTC(const std::string& key);
 int killAllRTC();
 int syncRTC(const std::string& fullpath);
 int getSyncRTCs(std::vector<std::string>& strList);
+
+
+extern SimulatorClock simulatorClock;

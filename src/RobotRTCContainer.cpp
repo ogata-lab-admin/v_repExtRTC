@@ -82,7 +82,7 @@ void RobotRTCHolder::stop() {
 
 void RobotRTCHolder::tick(const float interval) {
     m_Counter += interval;
-    if (m_Counter > m_Interval) {
+    if (m_Counter >= m_Interval) {
       m_Counter = 0;
       m_pEC->tick();
     }
