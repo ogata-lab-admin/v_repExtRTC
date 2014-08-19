@@ -95,7 +95,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(RTM_ROOT)\bin; $(OMNI_ROOT)\lib\x86_win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RTC110.lib;coil110.lib;omniORB415_rtd.lib;omniDynamic415_rtd.lib;omnithread34_rtd.lib;ws2_32.lib;mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RTC111_vc10.lib;coil111_vc10.lib;omniORB417_rt.lib;omniDynamic417_rt.lib;omnithread34_rt.lib;ws2_32.lib;mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

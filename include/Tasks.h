@@ -4,6 +4,7 @@
 #include <queue>
 #include <coil/Mutex.h>
 #include <iostream>
+#include <iterator>
 
 class MutexBinder
 {

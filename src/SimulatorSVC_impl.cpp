@@ -126,14 +126,17 @@ ssr::RETURN_VALUE SimulatorSVC_impl::synchronizeRTC(const char* rtcFullPath) {
 
 ssr::RETURN_VALUE SimulatorSVC_impl::getSynchronizingRTCs(::ssr::StringSeq_out fullPaths) {
   taskQueue.pushTask(Task(Task::GETSYNCRTC));
-  fullPaths = new ::ssr::StringSeq();
+  ssr::StringSeq* buf = new ::ssr::StringSeq();
+  ssr::StringSeq& buf2 = *buf;
+ // fullPaths =
   Return r = returnQueue.waitReturn();
   if (r.value == Return::RET_OK) {
-    fullPaths->length(r.stringList.size());
+    buf2.length(r.stringList.size());
     for (int i = 0;i < r.stringList.size();i++) {
-      fullPaths[i] = ::CORBA::string_dup(r.stringList[i].c_str());
+		buf2[i] = ::CORBA::string_dup(r.stringList[i].c_str());
     }
   }
+  fullPaths = buf;
   return returnCheck(r);
 }
 
