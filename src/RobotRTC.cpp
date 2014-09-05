@@ -166,6 +166,7 @@ RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
   std::cout << " - Activating RobotRTC(" << m_objectName << ")" << std::endl;
   m_controlledJointHandle.clear();
   m_observedJointHandle.clear();
+  updateParameters("default");
 
   std::string names = m_controlledJointNames;
   std::cout << " -- config: controlledJointNames=" << names << std::endl;

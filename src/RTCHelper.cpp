@@ -138,7 +138,7 @@ int spawnRangeRTC(std::string& key, std::string& arg) {
 	  << "conf.default.objectName=" << key << "&"
     ///<< "conf.default.activeJointNames=" << names << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"
-	  << "conf.__innerparam.argument=" << arg << "&"
+    //<< "conf.__innerparam.argument=" << arg << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
 	  << "conf.__innerparam.bufSize=" << bufSize << "&"
@@ -167,7 +167,7 @@ int spawnCameraRTC(std::string& key, std::string& arg) {
 	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
 	  << "conf.default.objectName=" << key << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"
-	  << "conf.__innerparam.argument=" << arg << "&"
+    //  << "conf.__innerparam.argument=" << arg << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << arg;
   RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
@@ -216,7 +216,7 @@ int spawnRobotRTC(std::string& key, std::string &arg) {
     	  << "conf.default.controlledJointNames=" << names << "&"
 	  << "conf.default.observedJointNames=" << names << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"
-	  << "conf.__innerparam.argument=" << arg << "&"
+    //<< "conf.__innerparam.argument=" << arg << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << "conf.__innerparam.allNames=" << names << "&"
 	  << "conf.__innerparam.allHandles=" << handles << "&"
