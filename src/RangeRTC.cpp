@@ -30,7 +30,9 @@ static const char* rangertc_spec[] =
     "lang_type",         "compile",
     // Configuration variables
     "conf.default.objectName", "none",
-    "conf.default.offset", "0,0,0,0,0,0",
+    "conf.default.geometry_offset", "0,0,0,0,0,0",
+	"conf.default.maxRange", "30.0",
+	"conf.default.minRange", "0.3",
     //    "conf.default.objectHandle", "-1",
     //"conf.default.activeJointNames", "[]",
     // Widget
@@ -84,6 +86,8 @@ RTC::ReturnCode_t RangeRTC::onInitialize()
   // Bind variables and configuration variable
   bindParameter("objectName", m_objectName, "none");
   bindParameter("geometry_offset", m_offsetStr, "0,0,0,0,0,0");
+  bindParameter("maxRange", m_maxRange, "30.0");
+  bindParameter("minRange", m_minRange, "0.3");
   // </rtc-template>
 
 
@@ -158,6 +162,9 @@ RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
   m_range.geometry.geometry.pose.orientation.p = values[4];
   m_range.geometry.geometry.pose.orientation.y = values[5];
 
+  m_range.config.maxRange = m_maxRange;
+  m_range.config.minRange = m_minRange;
+
   return RTC::RTC_OK;
 }
 
@@ -215,7 +222,12 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
       m_range.config.maxAngle = angle;
       m_range.config.angularRes = (m_range.config.maxAngle - m_range.config.minAngle) / (ray_size-1);
     }
-    m_range.ranges[i] = distance;
+
+	if (distance > m_range.config.maxRange) {
+		m_range.ranges[i] = m_range.config.maxRange;
+	} else {
+	    m_range.ranges[i] = distance;
+	}
   }
 
   m_rangeOut.write();

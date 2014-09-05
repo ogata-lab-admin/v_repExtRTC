@@ -243,6 +243,10 @@ class RangeRTC
    */
   std::string m_offsetStr;
 
+  double m_maxRange;
+
+  double m_minRange;
+
   // </rtc-template>
 
   // DataInPort declaration

@@ -259,6 +259,9 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
       std::cout << " -- But " << m_targetForce.data.length() << " data is sent." << std::endl;
       return RTC::RTC_ERROR;
     }
+    for(uint32_t i = 0;i < m_targetForce.data.length();i++) {
+      simSetJointForce(m_controlledJointHandle[i], m_targetForce.data[i]);
+    }
   }
   
   float dt = simGetSimulationTimeStep();
