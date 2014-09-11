@@ -52,15 +52,6 @@ namespace ssr {
 const ::CORBA::TypeCode_ptr ssr::_tc_Simulator = CORBA::TypeCode::PR_interface_tc("IDL:ssr/Simulator:1.0", "Simulator", &_0RL_tcTrack);
 #endif
 
-#if defined(HAS_Cplusplus_Namespace) && defined(_MSC_VER)
-// MSVC++ does not give the constant external linkage otherwise.
-namespace ssr { 
-  const ::CORBA::TypeCode_ptr _tc_SimulatedRobot = CORBA::TypeCode::PR_interface_tc("IDL:ssr/SimulatedRobot:1.0", "SimulatedRobot", &_0RL_tcTrack);
-} 
-#else
-const ::CORBA::TypeCode_ptr ssr::_tc_SimulatedRobot = CORBA::TypeCode::PR_interface_tc("IDL:ssr/SimulatedRobot:1.0", "SimulatedRobot", &_0RL_tcTrack);
-#endif
-
 static void _0RL_ssr_mRETURN__VALUE_marshal_fn(cdrStream& _s, void* _v)
 {
   ssr::RETURN_VALUE* _p = (ssr::RETURN_VALUE*)_v;
@@ -184,58 +175,6 @@ void operator<<=(::CORBA::Any& _a, ssr::Simulator_ptr* _op)
       _o = (ssr::Simulator_ptr)_r->_ptrToObjRef(ssr::Simulator::_PD_repoId);
     else
       _o = ssr::Simulator::_nil();
-    return 1;
-  }
-  return 0;
-}
-
-static void _0RL_ssr_mSimulatedRobot_marshal_fn(cdrStream& _s, void* _v)
-{
-  omniObjRef* _o = (omniObjRef*)_v;
-  omniObjRef::_marshal(_o, _s);
-}
-static void _0RL_ssr_mSimulatedRobot_unmarshal_fn(cdrStream& _s, void*& _v)
-{
-  omniObjRef* _o = omniObjRef::_unMarshal(ssr::SimulatedRobot::_PD_repoId, _s);
-  _v = _o;
-}
-static void _0RL_ssr_mSimulatedRobot_destructor_fn(void* _v)
-{
-  omniObjRef* _o = (omniObjRef*)_v;
-  if (_o)
-    omni::releaseObjRef(_o);
-}
-
-void operator<<=(::CORBA::Any& _a, ssr::SimulatedRobot_ptr _o)
-{
-  ssr::SimulatedRobot_ptr _no = ssr::SimulatedRobot::_duplicate(_o);
-  _a.PR_insert(ssr::_tc_SimulatedRobot,
-               _0RL_ssr_mSimulatedRobot_marshal_fn,
-               _0RL_ssr_mSimulatedRobot_destructor_fn,
-               _no->_PR_getobj());
-}
-void operator<<=(::CORBA::Any& _a, ssr::SimulatedRobot_ptr* _op)
-{
-  _a.PR_insert(ssr::_tc_SimulatedRobot,
-               _0RL_ssr_mSimulatedRobot_marshal_fn,
-               _0RL_ssr_mSimulatedRobot_destructor_fn,
-               (*_op)->_PR_getobj());
-  *_op = ssr::SimulatedRobot::_nil();
-}
-
-::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, ssr::SimulatedRobot_ptr& _o)
-{
-  void* _v;
-  if (_a.PR_extract(ssr::_tc_SimulatedRobot,
-                    _0RL_ssr_mSimulatedRobot_unmarshal_fn,
-                    _0RL_ssr_mSimulatedRobot_marshal_fn,
-                    _0RL_ssr_mSimulatedRobot_destructor_fn,
-                    _v)) {
-    omniObjRef* _r = (omniObjRef*)_v;
-    if (_r)
-      _o = (ssr::SimulatedRobot_ptr)_r->_ptrToObjRef(ssr::SimulatedRobot::_PD_repoId);
-    else
-      _o = ssr::SimulatedRobot::_nil();
     return 1;
   }
   return 0;

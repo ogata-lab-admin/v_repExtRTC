@@ -8,6 +8,9 @@
 #include "VREPRTC.h"
 #include "RangeRTC.h"
 #include "CameraRTC.h"
+#include "AccelerometerRTC.h"
+#include "GyroRTC.h"
+#include "DepthRTC.h"
 #include "RobotRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
@@ -38,6 +41,9 @@ void MyModuleInit(RTC::Manager* manager)
   RobotRTCInit(manager);
   RangeRTCInit(manager);
   CameraRTCInit(manager);
+  AccelerometerRTCInit(manager);
+  GyroRTCInit(manager);
+  DepthRTCInit(manager);
   VREPRTCInit(manager);
   manager->registerECFactory("SynchExtTriggerEC", 
 			     RTC::ECCreate<RTC::OpenHRPExecutionContext>,
@@ -164,6 +170,106 @@ int spawnCameraRTC(std::string& key, std::string& arg) {
   }
   std::ostringstream arg_oss;
   arg_oss << "CameraRTC?" 
+	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+	  << "conf.default.objectName=" << key << "&"
+	  << "conf.__innerparam.objectName=" << key << "&"
+    //  << "conf.__innerparam.argument=" << arg << "&"
+	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
+	  << arg;
+  RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+  robotContainer.push(cmp->getObjRef(), key);
+
+  return 0;
+}
+
+
+int spawnAccelerometerRTC(std::string& key, std::string& arg) {
+  std::cout << " -- Spawning AccelerometerRTC (objectName = " << key << ")" << std::endl;
+  simInt objHandle = simGetObjectHandle(key.c_str());
+  if (objHandle == -1) {
+    std::cout << " --- Failed to get object handle." << std::endl;
+    return -1;
+  }
+  
+  simInt bufSize = 4096;
+  std::ostringstream oss;
+  oss << "accelerometerData" << simGetNameSuffix(key.c_str());
+  //std::string handle = std::string("accelerometerData") + std::string(simGetNameSuffix(key.c_str())
+  std::string handle;
+
+  simInt tubeHandle = simTubeOpen(0, oss.str().c_str(), bufSize, false);
+  if (tubeHandle < 0) {
+    std::cout << " --- Can not open Communication Tube to " << key << std::endl;
+    return -1;
+  }
+
+  std::ostringstream arg_oss;
+  arg_oss << "AccelerometerRTC?" 
+	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+	  << "conf.default.objectName=" << key << "&"
+    ///<< "conf.default.activeJointNames=" << names << "&"
+	  << "conf.__innerparam.objectName=" << key << "&"
+    //<< "conf.__innerparam.argument=" << arg << "&"
+	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
+	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
+	  << "conf.__innerparam.bufSize=" << bufSize << "&"
+	  << arg;
+  RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+  robotContainer.push(cmp->getObjRef(), key);
+  return 0;
+}
+
+
+int spawnGyroRTC(std::string& key, std::string& arg) {
+  std::cout << " -- Spawning GyroRTC (objectName = " << key << ")" << std::endl;
+  simInt objHandle = simGetObjectHandle(key.c_str());
+  if (objHandle == -1) {
+    std::cout << " --- Failed to get object handle." << std::endl;
+    return -1;
+  }
+  
+  simInt bufSize = 4096;
+  std::ostringstream oss;
+  oss << "gyroData" << simGetNameSuffix(key.c_str());
+  //std::string handle = std::string("accelerometerData") + std::string(simGetNameSuffix(key.c_str())
+  std::string handle;
+  simInt tubeHandle = simTubeOpen(0, oss.str().c_str(), bufSize, false);
+  if (tubeHandle < 0) {
+    std::cout << " --- Can not open Communication Tube to " << key << std::endl;
+    return -1;
+  }
+
+  std::ostringstream arg_oss;
+  arg_oss << "GyroRTC?" 
+	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+	  << "conf.default.objectName=" << key << "&"
+    ///<< "conf.default.activeJointNames=" << names << "&"
+	  << "conf.__innerparam.objectName=" << key << "&"
+    //<< "conf.__innerparam.argument=" << arg << "&"
+	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
+	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
+	  << "conf.__innerparam.bufSize=" << bufSize << "&"
+	  << arg;
+  RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+  robotContainer.push(cmp->getObjRef(), key);
+  return 0;
+}
+
+int spawnDepthRTC(std::string& key, std::string& arg) {
+  std::cout << " -- Spawning Depth RTC (objectName = " << key << ")" << std::endl;
+  simInt objHandle = simGetObjectHandle(key.c_str());
+  if (objHandle == -1) {
+    std::cout << " --- failed to get object handle." << std::endl;
+    return -1;
+  }
+
+  simInt objType = simGetObjectType(objHandle);
+  if (objType != sim_object_visionsensor_type) {
+    std::cout << " --- Object "<<key << "is not Vision Sensor Type." << std::endl;
+    return -1;
+  }
+  std::ostringstream arg_oss;
+  arg_oss << "DepthRTC?" 
 	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
 	  << "conf.default.objectName=" << key << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"

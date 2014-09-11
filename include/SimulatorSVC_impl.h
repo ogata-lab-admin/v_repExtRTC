@@ -45,6 +45,9 @@ class SimulatorSVC_impl
    ssr::RETURN_VALUE spawnRobotRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
+   ssr::RETURN_VALUE spawnAccelerometerRTC(const char* objectName, const char* arg);
+   ssr::RETURN_VALUE spawnGyroRTC(const char* objectName, const char* arg);
+   ssr::RETURN_VALUE spawnDepthRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE killRobotRTC(const char* objectName);
   ssr::RETURN_VALUE killAllRobotRTC();
   ssr::RETURN_VALUE getObjectPose(const char* objectName, RTC::Pose3D& pose);
@@ -60,6 +63,7 @@ class SimulatorSVC_impl
  * @class SimulatedRobotSVC_impl
  * Example class implementing IDL interface ssr::SimulatedRobot
  */
+/**
 class SimulatedRobotSVC_impl
  : public virtual POA_ssr::SimulatedRobot,
    public virtual PortableServer::RefCountServantBase
@@ -70,13 +74,7 @@ class SimulatedRobotSVC_impl
    //virtual ~SimulatedRobotSVC_impl();
 
  public:
-  /*!
-   * @brief standard constructor
-   */
    SimulatedRobotSVC_impl();
-  /*!
-   * @brief destructor
-   */
    virtual ~SimulatedRobotSVC_impl();
 
    // attributes and operations
@@ -84,7 +82,7 @@ class SimulatedRobotSVC_impl
 
 };
 
-
+**/
 
 #endif // SIMULATORSVC_IMPL_H
 

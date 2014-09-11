@@ -34,6 +34,10 @@ class Task {
     GETSYNCRTC = 12,
     GETSIMTIME = 13,
     GETSIMSTEP = 14,
+
+    SPAWNACCEL = 15,
+    SPAWNGYRO  = 16,
+    SPAWNDEPTH = 17,
   };
   int value;
   std::string key;

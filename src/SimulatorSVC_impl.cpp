@@ -91,6 +91,24 @@ ssr::RETURN_VALUE SimulatorSVC_impl::spawnCameraRTC(const char* objectName, cons
   return returnCheck(returnQueue.waitReturn());
 }
 
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnAccelerometerRTC(const char* objectName, const char* arg)
+{
+  taskQueue.pushTask(Task(Task::SPAWNACCEL, objectName, arg));
+  return returnCheck(returnQueue.waitReturn());
+}
+
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnGyroRTC(const char* objectName, const char* arg)
+{
+  taskQueue.pushTask(Task(Task::SPAWNGYRO, objectName, arg));
+  return returnCheck(returnQueue.waitReturn());
+}
+
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnDepthRTC(const char* objectName, const char* arg)
+{
+  taskQueue.pushTask(Task(Task::SPAWNDEPTH, objectName, arg));
+  return returnCheck(returnQueue.waitReturn());
+}
+
 ssr::RETURN_VALUE SimulatorSVC_impl::killRobotRTC(const char* objectName)
 {
   taskQueue.pushTask(Task(Task::KILLRTC, objectName));
@@ -168,7 +186,7 @@ ssr::RETURN_VALUE SimulatorSVC_impl::getSimulationTime(::CORBA::Float& time) {
 
 /*
  * Example implementational code for IDL interface ssr::SimulatedRobot
- */
+
 SimulatedRobotSVC_impl::SimulatedRobotSVC_impl()
 {
   // Please add extra constructor code here.
@@ -181,9 +199,9 @@ SimulatedRobotSVC_impl::~SimulatedRobotSVC_impl()
 }
 
 
-/*
+
  * Methods corresponding to IDL attributes and operations
- */
+
 ssr::RETURN_VALUE SimulatedRobotSVC_impl::getJointTagNames(ssr::StringSeq_out tags)
 {
 	ssr::RETURN_VALUE result;
@@ -193,7 +211,7 @@ ssr::RETURN_VALUE SimulatedRobotSVC_impl::getJointTagNames(ssr::StringSeq_out ta
 #endif
   return result;
 }
-
+*/
 
 // End of example implementational code
 

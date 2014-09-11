@@ -1,8 +1,24 @@
+/**
+ * Simulator.idl
+ * 
+ * This file defines Simulator Common Interface 
+ *
+ * @date 2014/09/11
+ * @author Yuki Suga (ysuga@sugarsweetrobotics.com)
+ * @copyright 2014, Sugar Sweet Robotics
+ * @license Creative Commons License 3.0 (CC-BY-SA)
+ */
 
 #include "BasicDataType.idl"
 #include "ExtendedDataTypes.idl"
 
+/**
+ *
+ */
 module ssr {
+  
+  /**
+   */
   enum RETURN_VALUE {
     RETVAL_OK,
     RETVAL_INVALID_PRECONDITION,
@@ -14,39 +30,136 @@ module ssr {
   typedef long OBJECT_HANDLE;
   typedef sequence<string> StringSeq;
 
+  /**
+   * Simulator Common Interface 
+   */
   interface Simulator {
 
     /**
+     * loadProject
+     *
+     * Load Simulation Project. This resets SImulation and Spawned RTCs.
+     * @param path Full-path for Simulation Project
+     * @return RETVAL_OK if successfull.
+     * 
      */
     RETURN_VALUE loadProject(in string path);
 
     /**
+     * start
+     *
+     * Start Simulation
+     * @return RETVAL_OK if successfull.
      */
     RETURN_VALUE start();
 
     /**
+     * pause
+     *
+     * Pause Simulation
+     * @return RETVAL_OK if successfull.
      */
     RETURN_VALUE pause();
 
     /**
+     * resume
+     *
+     * Resume Paused Simulation
+     * @return RETVAL_OK if successfull.
      */
     RETURN_VALUE resume();
 
     /**
+     * stop
+     *
+     * Stop Simulation
+     * @return RETVAL_OK if successfull.
      */
     RETURN_VALUE stop();
 
     /**
+     * spawnRobotRTC
+     * 
+     * Spawn Robot RT-component which has the following interface:
+     * - DataInPort targetJointForce : RTC::TimedDoubleSeq
+     * - DataInPort targetJointVelocity : RTC::TimedDoubleSeq
+     * - DataInPort targetJointPosition : RTC::TimedDoubleSeq
+     * - DataOutPort currentJointForce : RTC::TimedDoubleSeq
+     * - DataOutPort currentJointVelocity : RTC::TimedDoubleSeq
+     * - DataOutPort currentJointPosition : RTC::TimedDoubleSeq
+     *  The RobotRTC should have controlledJoints and observedJoints configuration 
+     * which represents the joints receive the target- and send the current- respectively.
+     *  The configurations are list in YAML format like [ joint1,joint2,joint3 ]
+     * The input/output sequences must be the same order and same number of elements.
+     *  Some Simulator does not implement the interface. Ask implementators for detail.
+     * 
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
      */
     RETURN_VALUE spawnRobotRTC(in string objectName, in string arg);
 
     /**
+     * spawnRangeRTC
+     *
+     * Spawn Range RT-component which has
+     * - DataOutPort range : RTC::RangeData
+     *  The RangeRTC should have maxRange and minRange.
+     *
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
      */
     RETURN_VALUE spawnRangeRTC(in string objectName, in string arg);
 
     /**
+     * spawnCameraRTC
+     * 
+     * Spawn Camera RT-component which has
+     * - DataOutPort camera : RTC::CameraImage
+     * 
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
      */
     RETURN_VALUE spawnCameraRTC(in string objectName, in string arg);
+
+    /**
+     * spawnAccelerometerRTC /// ADDED in 2014/09/11
+     * 
+     * Spawn AccelerometerRTC which has
+     * - DataOutPort accel : RTC::TimedAcceleration3D
+     *
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
+     */
+    RETURN_VALUE spawnAccelerometerRTC(in string objectName, in string arg);
+
+    /**
+     * spawnGyroRTC /// ADDED in 2014/09/11
+     *
+     * Spawn GyroRTC which has
+     * - DataOutPort gyro : RTC::TimedAngularAcceleration3D
+     * 
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent
+     * @return RETVAL_OK if successful.
+     */
+    RETURN_VALUE spawnGyroRTC(in string objectName, in string arg);
+
+    /**
+     * spawnDepthRTC /// ADDED in 2014/09/11
+     * 
+     * Spawn DepthRTC which has
+     * - DataOutPort pointCloud : RTC::PointCloud
+     *
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
+     */
+    RETURN_VALUE spawnDepthRTC(in string objectName, in string arg);
+
 
     /**
      */
@@ -73,38 +186,24 @@ module ssr {
     RETURN_VALUE getSynchronizingRTCs(out StringSeq fullPaths);
 
     /**
+     * getSimulationTimeStep
+     *
+     * Get Simulation Time Step [sec]
+     * @param timeStep (out) timeStep [sec]
+     * @return RETVAL_OK if successful
      */
     RETURN_VALUE getSimulationTimeStep(out float timeStep);
 
     /**
+     * getSimulationTime
+     *
+     * Get Simulation Time [sec]
+     * @param time (out) simulation time [sec]
+     * @return RETVAL_OK if successful
      */
     RETURN_VALUE getSimulationTime(out float time);
 
     
-  };
-
-
-
-  interface SimulatedRobot {
-    
-    /**
-     */
-    RETURN_VALUE getJointTagNames(out StringSeq tags);
-    
-    /**
-    RETURN_VALUE setJointAngle(in string tag, in double radian);
-
-    RETURN_VALUE setJointVelocity(in string tag, in double radian_per_sec);
-
-    RETURN_VALUE setJointForce(in string tag, in double radian_per_sec_sec);
-
-    RETURN_VALUE setJointAngle(in string tag, out double radian);
-
-    RETURN_VALUE setJointVelocity(in string tag, out double radian_per_sec);
-
-    RETURN_VALUE setJointForce(in string tag, out double radian_per_sec_sec);
-    **/
-
   };
   
 };

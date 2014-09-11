@@ -160,6 +160,33 @@ void message_pump() {
 	  }
 
 	  break;
+	case Task::SPAWNDEPTH:
+	  std::cout << " - Task::Spawndepth" << std::endl;
+	  if (spawnDepthRTC(t.key, t.arg) < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+
+	  break;
+	case Task::SPAWNACCEL:
+	  std::cout << " - Task::Spawnaccel" << std::endl;
+	  if (spawnAccelerometerRTC(t.key, t.arg) < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+
+	  break;
+	case Task::SPAWNGYRO:
+	  std::cout << " - Task::Spawngyro" << std::endl;
+	  if (spawnGyroRTC(t.key, t.arg) < 0) {
+	    returnQueue.returnReturn(Return(Return::RET_ERROR));
+	  } else {
+	    returnQueue.returnReturn(Return(Return::RET_OK));
+	  }
+
+	  break;
 	case Task::SPAWNCAMERA:
 	  std::cout << " - Task::SpawnCamera" << std::endl;
 	  if (spawnCameraRTC(t.key, t.arg) < 0) {

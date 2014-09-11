@@ -256,6 +256,9 @@ _CORBA_MODULE_BEG
     RETURN_VALUE spawnRobotRTC(const char* objectName, const char* arg);
     RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg);
     RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
+    RETURN_VALUE spawnAccelerometerRTC(const char* objectName, const char* arg);
+    RETURN_VALUE spawnGyroRTC(const char* objectName, const char* arg);
+    RETURN_VALUE spawnDepthRTC(const char* objectName, const char* arg);
     RETURN_VALUE killRobotRTC(const char* objectName);
     RETURN_VALUE killAllRobotRTC();
     RETURN_VALUE getObjectPose(const char* objectName, ::RTC::Pose3D& pose);
@@ -305,6 +308,9 @@ _CORBA_MODULE_BEG
     virtual RETURN_VALUE spawnRobotRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnRangeRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg) = 0;
+    virtual RETURN_VALUE spawnAccelerometerRTC(const char* objectName, const char* arg) = 0;
+    virtual RETURN_VALUE spawnGyroRTC(const char* objectName, const char* arg) = 0;
+    virtual RETURN_VALUE spawnDepthRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE killRobotRTC(const char* objectName) = 0;
     virtual RETURN_VALUE killAllRobotRTC() = 0;
     virtual RETURN_VALUE getObjectPose(const char* objectName, ::RTC::Pose3D& pose) = 0;
@@ -326,115 +332,6 @@ _CORBA_MODULE_BEG
 
   _CORBA_MODULE_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_Simulator;
 
-#ifndef __ssr_mSimulatedRobot__
-#define __ssr_mSimulatedRobot__
-
-  class SimulatedRobot;
-  class _objref_SimulatedRobot;
-  class _impl_SimulatedRobot;
-  
-  typedef _objref_SimulatedRobot* SimulatedRobot_ptr;
-  typedef SimulatedRobot_ptr SimulatedRobotRef;
-
-  class SimulatedRobot_Helper {
-  public:
-    typedef SimulatedRobot_ptr _ptr_type;
-
-    static _ptr_type _nil();
-    static _CORBA_Boolean is_nil(_ptr_type);
-    static void release(_ptr_type);
-    static void duplicate(_ptr_type);
-    static void marshalObjRef(_ptr_type, cdrStream&);
-    static _ptr_type unmarshalObjRef(cdrStream&);
-  };
-
-  typedef _CORBA_ObjRef_Var<_objref_SimulatedRobot, SimulatedRobot_Helper> SimulatedRobot_var;
-  typedef _CORBA_ObjRef_OUT_arg<_objref_SimulatedRobot,SimulatedRobot_Helper > SimulatedRobot_out;
-
-#endif
-
-  // interface SimulatedRobot
-  class SimulatedRobot {
-  public:
-    // Declarations for this interface type.
-    typedef SimulatedRobot_ptr _ptr_type;
-    typedef SimulatedRobot_var _var_type;
-
-    static _ptr_type _duplicate(_ptr_type);
-    static _ptr_type _narrow(::CORBA::Object_ptr);
-    static _ptr_type _unchecked_narrow(::CORBA::Object_ptr);
-    
-    static _ptr_type _nil();
-
-    static inline void _marshalObjRef(_ptr_type, cdrStream&);
-
-    static inline _ptr_type _unmarshalObjRef(cdrStream& s) {
-      omniObjRef* o = omniObjRef::_unMarshal(_PD_repoId,s);
-      if (o)
-        return (_ptr_type) o->_ptrToObjRef(_PD_repoId);
-      else
-        return _nil();
-    }
-
-    static _core_attr const char* _PD_repoId;
-
-    // Other IDL defined within this scope.
-    
-  };
-
-  class _objref_SimulatedRobot :
-    public virtual ::CORBA::Object,
-    public virtual omniObjRef
-  {
-  public:
-    RETURN_VALUE getJointTagNames(::ssr::StringSeq_out tags);
-
-    inline _objref_SimulatedRobot()  { _PR_setobj(0); }  // nil
-    _objref_SimulatedRobot(omniIOR*, omniIdentity*);
-
-  protected:
-    virtual ~_objref_SimulatedRobot();
-
-    
-  private:
-    virtual void* _ptrToObjRef(const char*);
-
-    _objref_SimulatedRobot(const _objref_SimulatedRobot&);
-    _objref_SimulatedRobot& operator = (const _objref_SimulatedRobot&);
-    // not implemented
-
-    friend class SimulatedRobot;
-  };
-
-  class _pof_SimulatedRobot : public _OMNI_NS(proxyObjectFactory) {
-  public:
-    inline _pof_SimulatedRobot() : _OMNI_NS(proxyObjectFactory)(SimulatedRobot::_PD_repoId) {}
-    virtual ~_pof_SimulatedRobot();
-
-    virtual omniObjRef* newObjRef(omniIOR*,omniIdentity*);
-    virtual _CORBA_Boolean is_a(const char*) const;
-  };
-
-  class _impl_SimulatedRobot :
-    public virtual omniServant
-  {
-  public:
-    virtual ~_impl_SimulatedRobot();
-
-    virtual RETURN_VALUE getJointTagNames(::ssr::StringSeq_out tags) = 0;
-    
-  public:  // Really protected, workaround for xlC
-    virtual _CORBA_Boolean _dispatch(omniCallHandle&);
-
-  private:
-    virtual void* _ptrToInterface(const char*);
-    virtual const char* _mostDerivedRepoId();
-    
-  };
-
-
-  _CORBA_MODULE_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_SimulatedRobot;
-
 _CORBA_MODULE_END
 
 
@@ -451,18 +348,6 @@ _CORBA_MODULE_BEG
 
     inline ::ssr::Simulator_ptr _this() {
       return (::ssr::Simulator_ptr) _do_this(::ssr::Simulator::_PD_repoId);
-    }
-  };
-
-  class SimulatedRobot :
-    public virtual ssr::_impl_SimulatedRobot,
-    public virtual ::PortableServer::ServantBase
-  {
-  public:
-    virtual ~SimulatedRobot();
-
-    inline ::ssr::SimulatedRobot_ptr _this() {
-      return (::ssr::SimulatedRobot_ptr) _do_this(::ssr::SimulatedRobot::_PD_repoId);
     }
   };
 
@@ -510,20 +395,10 @@ void operator<<=(::CORBA::Any& _a, ssr::Simulator_ptr _s);
 void operator<<=(::CORBA::Any& _a, ssr::Simulator_ptr* _s);
 _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, ssr::Simulator_ptr& _s);
 
-void operator<<=(::CORBA::Any& _a, ssr::SimulatedRobot_ptr _s);
-void operator<<=(::CORBA::Any& _a, ssr::SimulatedRobot_ptr* _s);
-_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, ssr::SimulatedRobot_ptr& _s);
-
 
 
 inline void
 ssr::Simulator::_marshalObjRef(::ssr::Simulator_ptr obj, cdrStream& s) {
-  omniObjRef::_marshal(obj->_PR_getobj(),s);
-}
-
-
-inline void
-ssr::SimulatedRobot::_marshalObjRef(::ssr::SimulatedRobot_ptr obj, cdrStream& s) {
   omniObjRef::_marshal(obj->_PR_getobj(),s);
 }
 

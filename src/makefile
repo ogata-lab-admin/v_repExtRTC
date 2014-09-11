@@ -6,7 +6,7 @@ CFLAGS = -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config -
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  -lomniORB4 -lomnithread -lomniDynamic4 -lRTC -lcoil
 LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 
-OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o
+OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o
 
 OS = $(shell uname -s)
 ECHO=@
