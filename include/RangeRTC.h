@@ -291,6 +291,8 @@ class RangeRTC
   int m_tubeHandle;
   int m_bufferSize;
   uint8_t* m_pBuffer;
+
+  bool isInitRangeConfig();
 };
 
 

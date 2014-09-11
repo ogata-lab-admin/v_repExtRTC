@@ -161,11 +161,19 @@ RTC::ReturnCode_t RangeRTC::onActivated(RTC::UniqueId ec_id)
   m_range.geometry.geometry.pose.orientation.r = values[3];
   m_range.geometry.geometry.pose.orientation.p = values[4];
   m_range.geometry.geometry.pose.orientation.y = values[5];
-
   m_range.config.maxRange = m_maxRange;
   m_range.config.minRange = m_minRange;
-
+  m_range.config.maxAngle = 0.0;
+  m_range.config.minAngle = 0.0;
   return RTC::RTC_OK;
+}
+
+
+bool RangeRTC::isInitRangeConfig() { 
+  if(m_range.config.maxAngle == m_range.config.minAngle) {
+    return false;
+  } 
+  return true;
 }
 
 
@@ -202,6 +210,8 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
     m_range.ranges.length(ray_size);
   }
 
+  bool previous_point_is_valid = false;
+  double previous_angle = 0.0;
   for(int i = 0;i < ray_size;i++) {
     float x[3];
     for(int j = 0;j < 3;j++) {
@@ -216,21 +226,34 @@ RTC::ReturnCode_t RangeRTC::onExecute(RTC::UniqueId ec_id)
     double distance = sqrt(x[1]*x[1] + x[0]*x[0]);
     //std::cout << " --- " << distance << "/rad=" << angle << ", deg=" << angle / 3.1415926 * 180.0 << std::endl;
 
-    if (i == 0) { //start angle
-      m_range.config.minAngle = angle;
-    } else if (i == ray_size-1) {
-      m_range.config.maxAngle = angle;
-      m_range.config.angularRes = (m_range.config.maxAngle - m_range.config.minAngle) / (ray_size-1);
-    }
+    const double epsilon = 0.001;
+    bool current_point_is_valid = distance < epsilon ? false : true;
 
 	if (distance > m_range.config.maxRange) {
 		m_range.ranges[i] = m_range.config.maxRange;
 	} else {
 	    m_range.ranges[i] = distance;
 	}
-  }
+    //m_range.ranges[i] = distance;
 
+    if (!isInitRangeConfig()) {
+      if (previous_point_is_valid && current_point_is_valid) {
+	m_range.config.angularRes = angle - previous_angle;
+      }
+      previous_angle = angle;
+      previous_point_is_valid = current_point_is_valid;
+    }
+
+  }
+  ///m_range.config.angularRes = (m_range.config.maxAngle - m_range.config.minAngle) / (ray_size-1);
+
+  if (!isInitRangeConfig()) {
+    double full_range = m_range.config.angularRes * (ray_size-1);
+    m_range.config.minAngle = -full_range/2;
+    m_range.config.maxAngle = full_range/2;
+  }
   m_rangeOut.write();
+  simReleaseBuffer((simChar*)pBuffer);
   
   return RTC::RTC_OK;
 }

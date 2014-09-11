@@ -258,7 +258,7 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	{ // The main script is about to be run (only called while a simulation is running (and not paused!))
 	  
 	  //  main script is called every dynamics calculation. 
-	  tickRTCs(0.050);
+	  tickRTCs(simGetSimulationTimeStep());
 	}
 	if (message==sim_message_eventcallback_simulationabouttostart)
 	{ // Simulation is about to start

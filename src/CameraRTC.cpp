@@ -150,6 +150,13 @@ RTC::ReturnCode_t CameraRTC::onExecute(RTC::UniqueId ec_id)
     return RTC::RTC_OK;
   }
 
+  
+  float time = simGetSimulationTime();
+  long sec = floor(time);
+  long nsec = (time - sec) * 1000*1000*1000;
+  m_image.tm.sec = sec;
+  m_image.tm.nsec = nsec;
+
   for (int i = 0;i < m_image.height;i++) {
     for (int j = 0;j < m_image.width;j++) {
       int index = i*m_image.width*3 + j*3; 
@@ -159,8 +166,10 @@ RTC::ReturnCode_t CameraRTC::onExecute(RTC::UniqueId ec_id)
       m_image.pixels[buffer_index + 2] = static_cast<unsigned char>(pBuffer[index+0] * 255);
     }
   }
+  simReleaseBuffer((simChar*)pBuffer);
   m_imageOut.write();
-      
+
+  
   
   /*
   simInt bufSize;
