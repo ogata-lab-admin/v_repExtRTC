@@ -26,13 +26,23 @@ void MyModuleInit(RTC::Manager* manager);
 int ManagerRunner::svc() {
   int argc = 1;
   char* argv[1] = {"vrep"};
-  
-  RTC::Manager* manager;
+ 
+  std::cout << " - ManagerRunner::svc() starts." << std::endl; 
   manager = RTC::Manager::init(argc, argv);
   manager->init(argc, argv);
   manager->setModuleInitProc(MyModuleInit);
   manager->activateManager();
-  manager->runManager(false);
+  manager->runManager(true);
+  while(!endflag) {
+  }
+
+
+  std::cout << " - ManagerRunner::svc() ending." << std::endl; 
+
+  manager->unloadAll();
+  manager->shutdown();
+  manager->join();
+  std::cout << " - ManagerRunner::svc() ends." << std::endl; 
   return 0;
 }
 
@@ -76,8 +86,8 @@ bool initRTM() {
 
 bool exitRTM() {
   std::cout << "Shutting Down RTC::Manager......" << std::endl;
-  RTC::Manager& manager = RTC::Manager::instance();
-  manager.shutdown();
+  //RTC::Manager& manager = RTC::Manager::instance();
+  //manager.shutdown();
   //manager.terminate();
   std::cout << "Waiting RTC::Manager......" << std::endl;
   //manager.join();

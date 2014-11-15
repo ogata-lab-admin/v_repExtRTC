@@ -246,10 +246,10 @@ class GyroRTC
 
   // DataOutPort declaration
   // <rtc-template block="outport_declare">
-  RTC::TimedAngularAcceleration3D m_gyro;
+  RTC::TimedAngularVelocity3D m_gyro;
   /*!
    */
-  OutPort<RTC::TimedAngularAcceleration3D> m_gyroOut;
+  OutPort<RTC::TimedAngularVelocity3D> m_gyroOut;
   
   // </rtc-template>
 

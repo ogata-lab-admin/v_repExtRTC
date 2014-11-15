@@ -29,14 +29,25 @@ class ManagerRunner : public coil::Task {
 public:
   ManagerRunner() {
     open(0);
+    endflag = false;
+  }
+
+  volatile bool endflag;
+  virtual ~ManagerRunner() {
+    //manager->shutdown();
+    //manager->join();
+    endflag = true;
   }
 
   virtual int open(void* arg) {
+    std::cout << " - Activating ManagerRunner" << std::endl;
     activate();
     return 0;
   }
 
   virtual int svc();
+
+  RTC::Manager* manager;
 };
 
 

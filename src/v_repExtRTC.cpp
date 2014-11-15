@@ -92,6 +92,7 @@ VREP_DLLEXPORT void v_repEnd()
 	// Here you could handle various clean-up tasks
         exitRTM();
 	unloadVrepLibrary(vrepLib); // release the library
+	std::cout << "exiting v_repEnd" << std::endl;
 }
 
 

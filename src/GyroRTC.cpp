@@ -177,9 +177,9 @@ RTC::ReturnCode_t GyroRTC::onExecute(RTC::UniqueId ec_id)
     }
     x[i] = buffer.float_value;
   }
-  m_gyro.data.aax = x[0];
-  m_gyro.data.aay = x[1];
-  m_gyro.data.aaz = x[2];
+  m_gyro.data.avx = x[0];
+  m_gyro.data.avy = x[1];
+  m_gyro.data.avz = x[2];
   m_gyroOut.write();
   simReleaseBuffer((simChar*)pBuffer);
   
