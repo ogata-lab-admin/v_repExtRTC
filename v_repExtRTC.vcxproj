@@ -12,7 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\v_repLib.cpp" />
+    <ClCompile Include="src\AccelerometerRTC.cpp" />
     <ClCompile Include="src\CameraRTC.cpp" />
+    <ClCompile Include="src\DepthRTC.cpp" />
+    <ClCompile Include="src\GyroRTC.cpp" />
     <ClCompile Include="src\RangeRTC.cpp" />
     <ClCompile Include="src\RobotRTC.cpp" />
     <ClCompile Include="src\RobotRTCContainer.cpp" />

@@ -178,8 +178,8 @@ RTC::ReturnCode_t DepthRTC::onExecute(RTC::UniqueId ec_id)
   for (int i = 0;i < m_height;i++) {
     for (int j = 0;j < m_width;j++) {
       int index = i*m_width + j; 
-      int vertical_angle = (i - m_height/2) * m_angularResolution;
-      int horizontal_angle = (j - m_width/2) * m_angularResolution;
+      double vertical_angle = (i - m_height/2) * m_angularResolution;
+      double horizontal_angle = (j - m_width/2) * m_angularResolution;
       float depth = pBuffer[index];
       double sinV = sin(vertical_angle);
       double cosV = cos(vertical_angle);
