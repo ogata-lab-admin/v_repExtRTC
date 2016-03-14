@@ -47,6 +47,7 @@ class SimulatorSVC_impl
    ssr::RETURN_VALUE spawnCameraRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnAccelerometerRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnGyroRTC(const char* objectName, const char* arg);
+   ssr::RETURN_VALUE spawnObjectRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE spawnDepthRTC(const char* objectName, const char* arg);
    ssr::RETURN_VALUE killRobotRTC(const char* objectName);
   ssr::RETURN_VALUE killAllRobotRTC();

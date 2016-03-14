@@ -37,7 +37,8 @@ class Task {
 
     SPAWNACCEL = 15,
     SPAWNGYRO  = 16,
-    SPAWNDEPTH = 17,
+	SPAWNDEPTH = 17,
+	SPAWNOBJECT = 18,
   };
   int value;
   std::string key;

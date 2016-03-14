@@ -60,6 +60,7 @@ int spawnCameraRTC(std::string& key, std::string& arg);
 int spawnAccelerometerRTC(std::string& key, std::string& arg);
 int spawnGyroRTC(std::string& key, std::string& arg);
 int spawnDepthRTC(std::string& key, std::string& arg);
+int spawnObjectRTC(std::string& key, std::string& arg);
 void startRTCs();
 void stopRTCs();
 void tickRTCs(const float interval);

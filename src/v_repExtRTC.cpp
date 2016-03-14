@@ -25,6 +25,21 @@
 LIBRARY vrepLib; // the V-REP library that we will dynamically load and bind
 
 
+static simInt mainItemHandle = -1;
+static simInt modelDlgHandle = -1;
+static simInt argDlgHandle = -1;
+static std::string modelName = "";
+static std::string argument = "";
+static simInt robotItemHandle;
+static simInt rangeItemHandle;
+static simInt cameraItemHandle;
+static simInt accelItemHandle;
+static simInt gyroItemHandle;
+static simInt depthItemHandle;
+static simInt objectItemHandle;
+
+
+static int (*spawnRTCMethod)(std::string&, std::string&);
 
 // This is the plugin start routine (called just once, just after the plugin was loaded):
 VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
@@ -80,17 +95,48 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
 	// Here you could also register custom Lua functions or custom Lua constants
 	// etc.
 
+	const simChar* entryLabel = "";
+	simInt itemCount = 1;
+//	simAddModuleMenuEntry(entryLabel, itemCount, &mainItemHandle);
+//	simSetModuleMenuItemState(mainItemHandle, 1, "RTCPlugin");
+
+	entryLabel = "RTCPlugin";
+	itemCount = 1;
+	simAddModuleMenuEntry(entryLabel, itemCount, &robotItemHandle);
+	simSetModuleMenuItemState(robotItemHandle, 1, "Add Robot RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &rangeItemHandle);
+	simSetModuleMenuItemState(rangeItemHandle, 1, "Add Range RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &cameraItemHandle);
+	simSetModuleMenuItemState(cameraItemHandle, 1, "Add Camera RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &accelItemHandle);
+	simSetModuleMenuItemState(accelItemHandle, 1, "Add Acceleration RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &gyroItemHandle);
+	simSetModuleMenuItemState(gyroItemHandle, 1, "Add Gyro RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &depthItemHandle);
+	simSetModuleMenuItemState(depthItemHandle, 1, "Add Depth RTC");
+
+	simAddModuleMenuEntry(entryLabel, itemCount, &objectItemHandle);
+	simSetModuleMenuItemState(objectItemHandle, 1, "Add Object RTC");
+
 	initRTM();
 	simulatorClock.setSimulationTimeStep(simGetSimulationTimeStep());
 
+	std::cout << "v_repExtRTC plugin safely loaded.\n";
+
 	return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
 }
+
 
 // This is the plugin end routine (called just once, when V-REP is ending, i.e. releasing this plugin):
 VREP_DLLEXPORT void v_repEnd()
 {
 	// Here you could handle various clean-up tasks
-        exitRTM();
+    exitRTM();
 	unloadVrepLibrary(vrepLib); // release the library
 	std::cout << "exiting v_repEnd" << std::endl;
 }
@@ -197,6 +243,16 @@ void message_pump() {
 	  }
 
 	  break;
+	case Task::SPAWNOBJECT:
+		std::cout << " - Task::SpawnObject" << std::endl;
+		if (spawnObjectRTC(t.key, t.arg) < 0) {
+			returnQueue.returnReturn(Return(Return::RET_ERROR));
+		}
+		else {
+			returnQueue.returnReturn(Return(Return::RET_OK));
+		}
+
+		break;
 	case Task::KILLRTC:
 	  std::cout << " - Task::KillRTC" << std::endl;
 	  if (killRTC(t.key) < 0) {
@@ -293,6 +349,82 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	  simulatorClock.setSimulationTimeStep(simGetSimulationTimeStep());
 	  //simulatorClock.setSimulationTime(simGetSimulationTime());
 	  startRTCs();
+	}
+	if (message == sim_message_eventcallback_menuitemselected) {
+		simInt handle = auxiliaryData[0];
+		simInt state = auxiliaryData[1];
+		if (handle == robotItemHandle) {
+			std::cout << "Robot Menu Selected" << std::endl;
+			mainItemHandle = robotItemHandle;
+			spawnRTCMethod = spawnRobotRTC;
+			modelDlgHandle = simDisplayDialog("Input Robot Item", "Input Robot Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == rangeItemHandle) {
+			std::cout << "Range Menu Selected" << std::endl;
+			mainItemHandle = rangeItemHandle;
+			spawnRTCMethod = spawnRangeRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Range Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == cameraItemHandle) {
+			std::cout << "Camera Menu Selected" << std::endl;
+			mainItemHandle = cameraItemHandle;
+			spawnRTCMethod = spawnCameraRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Vision Sensor Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == accelItemHandle) {
+			std::cout << "Acceleration Menu Selected" << std::endl;
+			mainItemHandle = accelItemHandle;
+			spawnRTCMethod = spawnAccelerometerRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Accel Sensor Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == gyroItemHandle) {
+			std::cout << "Gyro Menu Selected" << std::endl;
+			mainItemHandle = gyroItemHandle;
+			spawnRTCMethod = spawnGyroRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Gyro Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == depthItemHandle) {
+			std::cout << "Depth Menu Selected" << std::endl;
+			mainItemHandle = depthItemHandle;
+			spawnRTCMethod = spawnDepthRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Depth Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+		else if (handle == objectItemHandle) {
+			std::cout << "Object Menu Selected" << std::endl;
+			mainItemHandle = objectItemHandle;
+			spawnRTCMethod = spawnObjectRTC;
+			modelDlgHandle = simDisplayDialog("Input Item", "Input Object Model Name", sim_dlgstyle_input, "", NULL, NULL, NULL);
+		}
+
+	}
+
+	if (message == sim_message_eventcallback_refreshdialogs) {
+		if (modelDlgHandle >= 0) {
+			simInt ret = simGetDialogResult(modelDlgHandle);
+			if (ret != sim_dlgret_still_open) {
+				if (ret == sim_dlgret_ok) {
+					char *buf = simGetDialogInput(modelDlgHandle);
+					modelName = buf;
+					std::cout << "Model Name is " << buf << std::endl;
+					simReleaseBuffer(buf);
+
+					argDlgHandle = simDisplayDialog("Input Argument of RTC", "Input Argument of createComponent method", sim_dlgstyle_input, "", NULL, NULL, NULL);
+					modelDlgHandle = -1;
+				}
+			}
+		} else if (argDlgHandle >= 0) {
+			simInt ret = simGetDialogResult(argDlgHandle);
+			if (ret != sim_dlgret_still_open) {
+				if (ret == sim_dlgret_ok) {
+					char *buf = simGetDialogInput(argDlgHandle);
+					argument = buf;
+					std::cout << "createComponent Argument is " << buf << std::endl;
+					simReleaseBuffer(buf);
+					argDlgHandle = -1;
+					spawnRTCMethod(modelName, argument);
+				}
+			}
+		}
 	}
 
 	if (message==sim_message_eventcallback_simulationended)

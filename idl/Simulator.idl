@@ -160,6 +160,17 @@ module ssr {
      */
     RETURN_VALUE spawnDepthRTC(in string objectName, in string arg);
 
+    /**
+     * spawnObjectRTC /// ADDED in 2016/03/14
+     * 
+     * Spawn ObjectRTC which has
+     * - DataOutPort pose3d : RTC::TimedPose3D
+     *
+     * @param objectName Object name in Simulator
+     * @param arg argument for RTC::Manager::createComponent.
+     * @return RETVAL_OK if successful.
+     */
+    RETURN_VALUE spawnObjectRTC(in string objectName, in string arg);
 
     /**
      */

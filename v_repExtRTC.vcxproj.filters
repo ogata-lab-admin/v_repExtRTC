@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\AccelerometerRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GyroRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RangeRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RobotRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RobotRTCContainer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RTCHelper.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimulatorStub.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimulatorSVC_impl.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tasks.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\v_repExtRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\v_repLib.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VREPRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\v_repExtRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\v_repLib.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AccelerometerRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CameraRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DepthRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GyroRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RangeRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RobotRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RobotRTCContainer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RTCHelper.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Simulator.hh">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SimulatorSkel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SimulatorStub.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SimulatorSVC_impl.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tasks.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VREPRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{a06d2907-9d5c-47dd-9e4d-14aa4cfc8d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{8cbeacca-0392-4012-acba-0325f7066da9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

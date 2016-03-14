@@ -109,6 +109,12 @@ ssr::RETURN_VALUE SimulatorSVC_impl::spawnDepthRTC(const char* objectName, const
   return returnCheck(returnQueue.waitReturn());
 }
 
+ssr::RETURN_VALUE SimulatorSVC_impl::spawnObjectRTC(const char* objectName, const char* arg)
+{
+  taskQueue.pushTask(Task(Task::SPAWNOBJECT, objectName, arg));
+  return returnCheck(returnQueue.waitReturn());
+}
+
 ssr::RETURN_VALUE SimulatorSVC_impl::killRobotRTC(const char* objectName)
 {
   taskQueue.pushTask(Task(Task::KILLRTC, objectName));

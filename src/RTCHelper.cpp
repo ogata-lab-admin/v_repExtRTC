@@ -12,6 +12,7 @@
 #include "GyroRTC.h"
 #include "DepthRTC.h"
 #include "RobotRTC.h"
+#include "ObjectRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
 #include "v_repLib.h"
@@ -54,6 +55,7 @@ void MyModuleInit(RTC::Manager* manager)
   AccelerometerRTCInit(manager);
   GyroRTCInit(manager);
   DepthRTCInit(manager);
+  ObjectRTCInit(manager);
   VREPRTCInit(manager);
   manager->registerECFactory("SynchExtTriggerEC", 
 			     RTC::ECCreate<RTC::OpenHRPExecutionContext>,
@@ -293,6 +295,36 @@ int spawnDepthRTC(std::string& key, std::string& arg) {
 }
 
 
+int spawnObjectRTC(std::string& key, std::string& arg) {
+	std::cout << " -- Spawning Object RTC (objectName = " << key << ")" << std::endl;
+	simInt objHandle = simGetObjectHandle(key.c_str());
+	if (objHandle == -1) {
+		std::cout << " --- failed to get object handle." << std::endl;
+		return -1;
+	}
+
+	simInt objType = simGetObjectType(objHandle);
+	/*
+	if (objType != sim_object_visionsensor_type) {
+		std::cout << " --- Object " << key << "is not Vision Sensor Type." << std::endl;
+		return -1;
+	}
+	*/
+	std::ostringstream arg_oss;
+	arg_oss << "ObjectRTC?"
+		<< "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+		<< "conf.default.objectName=" << key << "&"
+		<< "conf.__innerparam.objectName=" << key << "&"
+		//  << "conf.__innerparam.argument=" << arg << "&"
+		<< "conf.__innerparam.objectHandle=" << objHandle << "&"
+		<< arg;
+	RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+	robotContainer.push(cmp->getObjRef(), key);
+
+	return 0;
+}
+
+
 int spawnRobotRTC(std::string& key, std::string &arg) {
   std::cout << " -- Spawning RTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
@@ -358,6 +390,7 @@ int killRTC(const std::string& key) {
   return robotContainer.kill(key);
 }
 
+
 int killAllRTC() {
   return robotContainer.killall();
 }
@@ -395,11 +428,16 @@ int syncRTC(const std::string& fullpath) {
     oss << "SynchExtTriggerEC";// << "?" << "exec_cxt.periodic.rate=" << rate;
     ///ExecutionContextBase* pEC = RTC::ExecutionContextFactory::instance().createObject(oss.str().c_str());
     ExecutionContextBase* pEC = RTC::Manager::instance().createContext(oss.str().c_str());
-    pEC->setRate(rate);
+	
+    //pEC->setRate(rate);
+	pEC->set_rate(rate);
+
     std::cout << " --- Add Component to ExecutionContext." << std::endl;
     RTC::RTObject_ptr rtc_ptr = RTC::RTObject::_narrow(corbaConsumer._ptr());
     
-    RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
+    ///RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
+	RTC::ReturnCode_t r = pEC->add_component(rtc_ptr);
+
     if (r != RTC::RTC_OK) {
       std::cout << " --- addComponent failed." << std::endl;
       return -1;

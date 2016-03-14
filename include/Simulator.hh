@@ -311,6 +311,7 @@ _CORBA_MODULE_BEG
     virtual RETURN_VALUE spawnAccelerometerRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnGyroRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE spawnDepthRTC(const char* objectName, const char* arg) = 0;
+    virtual RETURN_VALUE spawnObjectRTC(const char* objectName, const char* arg) = 0;
     virtual RETURN_VALUE killRobotRTC(const char* objectName) = 0;
     virtual RETURN_VALUE killAllRobotRTC() = 0;
     virtual RETURN_VALUE getObjectPose(const char* objectName, ::RTC::Pose3D& pose) = 0;
