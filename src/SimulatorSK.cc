@@ -511,17 +511,18 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::spawnDepthRTC(const char* objectName, 
 static void
 _0RL_lcfn_698515b8e775a3ed_e0000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_00000000* tcd = (_0RL_cd_698515b8e775a3ed_00000000*)cd;
+  _0RL_cd_698515b8e775a3ed_70000000* tcd = (_0RL_cd_698515b8e775a3ed_70000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
-  tcd->result = impl->killRobotRTC(tcd->arg_0);
+  tcd->result = impl->spawnObjectRTC(tcd->arg_0, tcd->arg_1);
 
 
 }
 
-ssr::RETURN_VALUE ssr::_objref_Simulator::killRobotRTC(const char* objectName)
+ssr::RETURN_VALUE ssr::_objref_Simulator::spawnObjectRTC(const char* objectName, const char* arg)
 {
-  _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_e0000000, "killRobotRTC", 13);
+  _0RL_cd_698515b8e775a3ed_70000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_e0000000, "spawnObjectRTC", 15);
   _call_desc.arg_0 = objectName;
+  _call_desc.arg_1 = arg;
 
   _invoke(_call_desc);
   return _call_desc.result;
@@ -532,6 +533,27 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::killRobotRTC(const char* objectName)
 static void
 _0RL_lcfn_698515b8e775a3ed_f0000000(omniCallDescriptor* cd, omniServant* svnt)
 {
+  _0RL_cd_698515b8e775a3ed_00000000* tcd = (_0RL_cd_698515b8e775a3ed_00000000*)cd;
+  ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
+  tcd->result = impl->killRobotRTC(tcd->arg_0);
+
+
+}
+
+ssr::RETURN_VALUE ssr::_objref_Simulator::killRobotRTC(const char* objectName)
+{
+  _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_f0000000, "killRobotRTC", 13);
+  _call_desc.arg_0 = objectName;
+
+  _invoke(_call_desc);
+  return _call_desc.result;
+
+
+}
+// Local call call-back function.
+static void
+_0RL_lcfn_698515b8e775a3ed_01000000(omniCallDescriptor* cd, omniServant* svnt)
+{
   _0RL_cd_698515b8e775a3ed_20000000* tcd = (_0RL_cd_698515b8e775a3ed_20000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->killAllRobotRTC();
@@ -541,7 +563,7 @@ _0RL_lcfn_698515b8e775a3ed_f0000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::killAllRobotRTC()
 {
-  _0RL_cd_698515b8e775a3ed_20000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_f0000000, "killAllRobotRTC", 16);
+  _0RL_cd_698515b8e775a3ed_20000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_01000000, "killAllRobotRTC", 16);
 
 
   _invoke(_call_desc);
@@ -551,11 +573,11 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::killAllRobotRTC()
 }
 // Proxy call descriptor class. Mangled signature:
 //  _cssr_mRETURN__VALUE_i_cstring_o_cRTC_mPose3D
-class _0RL_cd_698515b8e775a3ed_01000000
+class _0RL_cd_698515b8e775a3ed_11000000
   : public omniCallDescriptor
 {
 public:
-  inline _0RL_cd_698515b8e775a3ed_01000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
+  inline _0RL_cd_698515b8e775a3ed_11000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
      omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
@@ -577,42 +599,42 @@ public:
   ssr::RETURN_VALUE result;
 };
 
-void _0RL_cd_698515b8e775a3ed_01000000::marshalArguments(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_11000000::marshalArguments(cdrStream& _n)
 {
   _n.marshalString(arg_0,0);
 
 }
 
-void _0RL_cd_698515b8e775a3ed_01000000::unmarshalArguments(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_11000000::unmarshalArguments(cdrStream& _n)
 {
   arg_0_ = _n.unmarshalString(0);
   arg_0 = arg_0_.in();
 
 }
 
-void _0RL_cd_698515b8e775a3ed_01000000::marshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_11000000::marshalReturnedValues(cdrStream& _n)
 {
   result >>= _n;
   (const RTC::Pose3D&) *arg_1 >>= _n;
 
 }
 
-void _0RL_cd_698515b8e775a3ed_01000000::unmarshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_11000000::unmarshalReturnedValues(cdrStream& _n)
 {
   (ssr::RETURN_VALUE&)result <<= _n;
   (RTC::Pose3D&)*arg_1 <<= _n;
 
 }
 
-const char* const _0RL_cd_698515b8e775a3ed_01000000::_user_exns[] = {
+const char* const _0RL_cd_698515b8e775a3ed_11000000::_user_exns[] = {
   0
 };
 
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_11000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_21000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_01000000* tcd = (_0RL_cd_698515b8e775a3ed_01000000*)cd;
+  _0RL_cd_698515b8e775a3ed_11000000* tcd = (_0RL_cd_698515b8e775a3ed_11000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->getObjectPose(tcd->arg_0, *tcd->arg_1);
 
@@ -621,7 +643,7 @@ _0RL_lcfn_698515b8e775a3ed_11000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::getObjectPose(const char* objectName, ::RTC::Pose3D& pose)
 {
-  _0RL_cd_698515b8e775a3ed_01000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_11000000, "getObjectPose", 14);
+  _0RL_cd_698515b8e775a3ed_11000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_21000000, "getObjectPose", 14);
   _call_desc.arg_0 = objectName;
   _call_desc.arg_1 = &(::RTC::Pose3D&) pose;
 
@@ -632,11 +654,11 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::getObjectPose(const char* objectName, 
 }
 // Proxy call descriptor class. Mangled signature:
 //  _cssr_mRETURN__VALUE_i_cstring_i_cRTC_mPose3D
-class _0RL_cd_698515b8e775a3ed_21000000
+class _0RL_cd_698515b8e775a3ed_31000000
   : public omniCallDescriptor
 {
 public:
-  inline _0RL_cd_698515b8e775a3ed_21000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
+  inline _0RL_cd_698515b8e775a3ed_31000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
      omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
@@ -658,14 +680,14 @@ public:
   ssr::RETURN_VALUE result;
 };
 
-void _0RL_cd_698515b8e775a3ed_21000000::marshalArguments(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_31000000::marshalArguments(cdrStream& _n)
 {
   _n.marshalString(arg_0,0);
   (const RTC::Pose3D&) *arg_1 >>= _n;
 
 }
 
-void _0RL_cd_698515b8e775a3ed_21000000::unmarshalArguments(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_31000000::unmarshalArguments(cdrStream& _n)
 {
   arg_0_ = _n.unmarshalString(0);
   arg_0 = arg_0_.in();
@@ -674,27 +696,27 @@ void _0RL_cd_698515b8e775a3ed_21000000::unmarshalArguments(cdrStream& _n)
 
 }
 
-void _0RL_cd_698515b8e775a3ed_21000000::marshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_31000000::marshalReturnedValues(cdrStream& _n)
 {
   result >>= _n;
 
 }
 
-void _0RL_cd_698515b8e775a3ed_21000000::unmarshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_31000000::unmarshalReturnedValues(cdrStream& _n)
 {
   (ssr::RETURN_VALUE&)result <<= _n;
 
 }
 
-const char* const _0RL_cd_698515b8e775a3ed_21000000::_user_exns[] = {
+const char* const _0RL_cd_698515b8e775a3ed_31000000::_user_exns[] = {
   0
 };
 
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_31000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_41000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_21000000* tcd = (_0RL_cd_698515b8e775a3ed_21000000*)cd;
+  _0RL_cd_698515b8e775a3ed_31000000* tcd = (_0RL_cd_698515b8e775a3ed_31000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->setObjectPose(tcd->arg_0, *tcd->arg_1);
 
@@ -703,7 +725,7 @@ _0RL_lcfn_698515b8e775a3ed_31000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::setObjectPose(const char* objectName, const ::RTC::Pose3D& pose)
 {
-  _0RL_cd_698515b8e775a3ed_21000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_31000000, "setObjectPose", 14);
+  _0RL_cd_698515b8e775a3ed_31000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_41000000, "setObjectPose", 14);
   _call_desc.arg_0 = objectName;
   _call_desc.arg_1 = &(::RTC::Pose3D&) pose;
 
@@ -714,7 +736,7 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::setObjectPose(const char* objectName, 
 }
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_41000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_51000000(omniCallDescriptor* cd, omniServant* svnt)
 {
   _0RL_cd_698515b8e775a3ed_00000000* tcd = (_0RL_cd_698515b8e775a3ed_00000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
@@ -725,7 +747,7 @@ _0RL_lcfn_698515b8e775a3ed_41000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::synchronizeRTC(const char* rtcFullPath)
 {
-  _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_41000000, "synchronizeRTC", 15);
+  _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_51000000, "synchronizeRTC", 15);
   _call_desc.arg_0 = rtcFullPath;
 
   _invoke(_call_desc);
@@ -735,11 +757,11 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::synchronizeRTC(const char* rtcFullPath
 }
 // Proxy call descriptor class. Mangled signature:
 //  _cssr_mRETURN__VALUE_o_cssr_mStringSeq
-class _0RL_cd_698515b8e775a3ed_51000000
+class _0RL_cd_698515b8e775a3ed_61000000
   : public omniCallDescriptor
 {
 public:
-  inline _0RL_cd_698515b8e775a3ed_51000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
+  inline _0RL_cd_698515b8e775a3ed_61000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
      omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
@@ -756,14 +778,14 @@ public:
   ssr::RETURN_VALUE result;
 };
 
-void _0RL_cd_698515b8e775a3ed_51000000::marshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_61000000::marshalReturnedValues(cdrStream& _n)
 {
   result >>= _n;
   (const ssr::StringSeq&) arg_0 >>= _n;
 
 }
 
-void _0RL_cd_698515b8e775a3ed_51000000::unmarshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_61000000::unmarshalReturnedValues(cdrStream& _n)
 {
   (ssr::RETURN_VALUE&)result <<= _n;
   arg_0 = new ssr::StringSeq;
@@ -771,15 +793,15 @@ void _0RL_cd_698515b8e775a3ed_51000000::unmarshalReturnedValues(cdrStream& _n)
 
 }
 
-const char* const _0RL_cd_698515b8e775a3ed_51000000::_user_exns[] = {
+const char* const _0RL_cd_698515b8e775a3ed_61000000::_user_exns[] = {
   0
 };
 
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_61000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_71000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_51000000* tcd = (_0RL_cd_698515b8e775a3ed_51000000*)cd;
+  _0RL_cd_698515b8e775a3ed_61000000* tcd = (_0RL_cd_698515b8e775a3ed_61000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->getSynchronizingRTCs(tcd->arg_0.out());
 
@@ -788,7 +810,7 @@ _0RL_lcfn_698515b8e775a3ed_61000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::getSynchronizingRTCs(::ssr::StringSeq_out fullPaths)
 {
-  _0RL_cd_698515b8e775a3ed_51000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_61000000, "getSynchronizingRTCs", 21);
+  _0RL_cd_698515b8e775a3ed_61000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_71000000, "getSynchronizingRTCs", 21);
 
 
   _invoke(_call_desc);
@@ -799,11 +821,11 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::getSynchronizingRTCs(::ssr::StringSeq_
 }
 // Proxy call descriptor class. Mangled signature:
 //  _cssr_mRETURN__VALUE_o_cfloat
-class _0RL_cd_698515b8e775a3ed_71000000
+class _0RL_cd_698515b8e775a3ed_81000000
   : public omniCallDescriptor
 {
 public:
-  inline _0RL_cd_698515b8e775a3ed_71000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
+  inline _0RL_cd_698515b8e775a3ed_81000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
      omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
@@ -820,29 +842,29 @@ public:
   ssr::RETURN_VALUE result;
 };
 
-void _0RL_cd_698515b8e775a3ed_71000000::marshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_81000000::marshalReturnedValues(cdrStream& _n)
 {
   result >>= _n;
   arg_0 >>= _n;
 
 }
 
-void _0RL_cd_698515b8e775a3ed_71000000::unmarshalReturnedValues(cdrStream& _n)
+void _0RL_cd_698515b8e775a3ed_81000000::unmarshalReturnedValues(cdrStream& _n)
 {
   (ssr::RETURN_VALUE&)result <<= _n;
   (::CORBA::Float&)arg_0 <<= _n;
 
 }
 
-const char* const _0RL_cd_698515b8e775a3ed_71000000::_user_exns[] = {
+const char* const _0RL_cd_698515b8e775a3ed_81000000::_user_exns[] = {
   0
 };
 
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_81000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_91000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_71000000* tcd = (_0RL_cd_698515b8e775a3ed_71000000*)cd;
+  _0RL_cd_698515b8e775a3ed_81000000* tcd = (_0RL_cd_698515b8e775a3ed_81000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->getSimulationTimeStep(tcd->arg_0);
 
@@ -851,7 +873,7 @@ _0RL_lcfn_698515b8e775a3ed_81000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::getSimulationTimeStep(::CORBA::Float& timeStep)
 {
-  _0RL_cd_698515b8e775a3ed_71000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_81000000, "getSimulationTimeStep", 22);
+  _0RL_cd_698515b8e775a3ed_81000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_91000000, "getSimulationTimeStep", 22);
 
 
   _invoke(_call_desc);
@@ -862,9 +884,9 @@ ssr::RETURN_VALUE ssr::_objref_Simulator::getSimulationTimeStep(::CORBA::Float& 
 }
 // Local call call-back function.
 static void
-_0RL_lcfn_698515b8e775a3ed_91000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_698515b8e775a3ed_a1000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_698515b8e775a3ed_71000000* tcd = (_0RL_cd_698515b8e775a3ed_71000000*)cd;
+  _0RL_cd_698515b8e775a3ed_81000000* tcd = (_0RL_cd_698515b8e775a3ed_81000000*)cd;
   ssr::_impl_Simulator* impl = (ssr::_impl_Simulator*) svnt->_ptrToInterface(ssr::Simulator::_PD_repoId);
   tcd->result = impl->getSimulationTime(tcd->arg_0);
 
@@ -873,7 +895,7 @@ _0RL_lcfn_698515b8e775a3ed_91000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ssr::RETURN_VALUE ssr::_objref_Simulator::getSimulationTime(::CORBA::Float& time)
 {
-  _0RL_cd_698515b8e775a3ed_71000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_91000000, "getSimulationTime", 18);
+  _0RL_cd_698515b8e775a3ed_81000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_a1000000, "getSimulationTime", 18);
 
 
   _invoke(_call_desc);
@@ -999,9 +1021,17 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
     return 1;
   }
 
+  if( omni::strMatch(op, "spawnObjectRTC") ) {
+
+    _0RL_cd_698515b8e775a3ed_70000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_e0000000, "spawnObjectRTC", 15, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
   if( omni::strMatch(op, "killRobotRTC") ) {
 
-    _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_e0000000, "killRobotRTC", 13, 1);
+    _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_f0000000, "killRobotRTC", 13, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1009,7 +1039,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "killAllRobotRTC") ) {
 
-    _0RL_cd_698515b8e775a3ed_20000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_f0000000, "killAllRobotRTC", 16, 1);
+    _0RL_cd_698515b8e775a3ed_20000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_01000000, "killAllRobotRTC", 16, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1017,7 +1047,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "getObjectPose") ) {
 
-    _0RL_cd_698515b8e775a3ed_01000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_11000000, "getObjectPose", 14, 1);
+    _0RL_cd_698515b8e775a3ed_11000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_21000000, "getObjectPose", 14, 1);
     _call_desc.arg_1 = &_call_desc.arg_1_;
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1025,7 +1055,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "setObjectPose") ) {
 
-    _0RL_cd_698515b8e775a3ed_21000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_31000000, "setObjectPose", 14, 1);
+    _0RL_cd_698515b8e775a3ed_31000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_41000000, "setObjectPose", 14, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1033,7 +1063,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "synchronizeRTC") ) {
 
-    _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_41000000, "synchronizeRTC", 15, 1);
+    _0RL_cd_698515b8e775a3ed_00000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_51000000, "synchronizeRTC", 15, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1041,7 +1071,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "getSynchronizingRTCs") ) {
 
-    _0RL_cd_698515b8e775a3ed_51000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_61000000, "getSynchronizingRTCs", 21, 1);
+    _0RL_cd_698515b8e775a3ed_61000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_71000000, "getSynchronizingRTCs", 21, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1049,7 +1079,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "getSimulationTimeStep") ) {
 
-    _0RL_cd_698515b8e775a3ed_71000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_81000000, "getSimulationTimeStep", 22, 1);
+    _0RL_cd_698515b8e775a3ed_81000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_91000000, "getSimulationTimeStep", 22, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
@@ -1057,7 +1087,7 @@ ssr::_impl_Simulator::_dispatch(omniCallHandle& _handle)
 
   if( omni::strMatch(op, "getSimulationTime") ) {
 
-    _0RL_cd_698515b8e775a3ed_71000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_91000000, "getSimulationTime", 18, 1);
+    _0RL_cd_698515b8e775a3ed_81000000 _call_desc(_0RL_lcfn_698515b8e775a3ed_a1000000, "getSimulationTime", 18, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
