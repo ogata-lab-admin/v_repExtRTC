@@ -4,9 +4,9 @@ VREP_PROGRAMMING_DIR=${VREP_DIR}/programming/
 CFLAGS = -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
 #LDFLAGS = -lpthread -ldl `rtm-config --libs` --all-static
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  -lomniORB4 -lomnithread -lomniDynamic4 -lRTC -lcoil
-LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
+#LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 
-OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o
+OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o ObjectRTC.o
 
 OS = $(shell uname -s)
 ECHO=@
@@ -14,11 +14,13 @@ ECHO=@
 ifeq ($(OS), Linux)
 	CFLAGS += -D__linux
 	OPTION = -shared
+	LDFLAGS =  -lpthread -ldl `rtm-config --libs` 
 	EXT = so
 	TARGET = ../lib/libv_repExtRTC.$(EXT)
 else
 	CFLAGS += -D__APPLE__
 	OPTION = -dynamiclib -current_version 1.0
+	LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 	EXT = dylib
 	TARGET = ../lib/libv_repExtRTC.$(EXT)
 	BINDIR = ${VREP_DIR}vrep.app/Contents/MacOS/
