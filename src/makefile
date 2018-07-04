@@ -16,7 +16,8 @@ ifeq ($(OS), Linux)
 	OPTION = -shared
 	LDFLAGS =  -lpthread -ldl `rtm-config --libs` 
 	EXT = so
-	TARGET = ../lib/libv_repExtRTC.$(EXT)
+	TARGET = ../lib/libv_repExtRTC.$(EXT) ../lib/rtc.conf
+	BINDIR = ${VREP_DIR}
 else
 	CFLAGS += -D__APPLE__
 	OPTION = -dynamiclib -current_version 1.0
