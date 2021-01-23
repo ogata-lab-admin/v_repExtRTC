@@ -15,7 +15,7 @@
 #include "ObjectRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
-#include "v_repLib.h"
+#include "simLib.h"
 
 using namespace RTC;
 
@@ -358,13 +358,13 @@ int spawnRobotRTC(std::string& key, std::string &arg) {
   std::cout << " --- jointHandles = " << handles << std::endl;;
 
   std::ostringstream arg_oss;
-  arg_oss << "RobotRTC?" 
+  arg_oss << "RobotRTC?"
 	  << "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
 	  << "conf.default.objectName=" << key << "&"
-    	  << "conf.default.controlledJointNames=" << names << "&"
+	  << "conf.default.controlledJointNames=" << names << "&"
 	  << "conf.default.observedJointNames=" << names << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"
-    //<< "conf.__innerparam.argument=" << arg << "&"
+	  // << "conf.__innerparam.argument=" << arg << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << "conf.__innerparam.allNames=" << names << "&"
 	  << "conf.__innerparam.allHandles=" << handles << "&"
@@ -430,13 +430,14 @@ int syncRTC(const std::string& fullpath) {
     ExecutionContextBase* pEC = RTC::Manager::instance().createContext(oss.str().c_str());
 	
     //pEC->setRate(rate);
-	pEC->set_rate(rate);
+	// pEC->set_rate(rate);
+	pEC->setRate(rate);
 
     std::cout << " --- Add Component to ExecutionContext." << std::endl;
     RTC::RTObject_ptr rtc_ptr = RTC::RTObject::_narrow(corbaConsumer._ptr());
     
-    ///RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
-	RTC::ReturnCode_t r = pEC->add_component(rtc_ptr);
+    RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
+	//RTC::ReturnCode_t r = pEC->add_component(rtc_ptr);
 
     if (r != RTC::RTC_OK) {
       std::cout << " --- addComponent failed." << std::endl;

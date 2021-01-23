@@ -1,0 +1,1 @@
+omniidl -bcxx -Wba -nf -I"%RTM_ROOT%\\rtm\\idl" Simulator.idl

@@ -37,13 +37,13 @@
     <ClCompile Include="src\v_repExtRTC.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\v_repLib.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="src\VREPRTC.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="src\ObjectRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\simLib.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,7 +12,7 @@
 #include <sstream>
 #include <iostream>
 #include <math.h>
-#include <v_repLib.h>
+#include "simLib.h"
 // Module specification
 // <rtc-template block="module_spec">
 static const char* gyrortc_spec[] =

@@ -17,13 +17,17 @@ RobotRTCHolder::RobotRTCHolder(RTC::RTObject_ptr pRTC, const std::string& name, 
   } else {
     m_simulatorRTC = true;
     std::cout << " -- ExtraEC is nil. Default EC[0] is used." << std::endl;
-    RTC::ExecutionContext_ptr p = m_pRTC->get_context(0);
+    RTC::ExecutionContext_var p = m_pRTC->get_context(0);
+	std::cout << " -- OK. ExecutionContext(0) is now acquired." << std::endl;
+	m_pEC = NULL;
+	
     m_pEC = OpenRTM::ExtTrigExecutionContextService::_narrow(p);
     if (!m_pEC) {
       std::cout << " -- Execution Context [0] is not ExtTrigExecutionContext. Failed." << std::endl;
     }
   }
   init();
+  std::cout << " - RobotRTCHolder::RobotRTCHolder endned" << std::endl;
 }
 
 RobotRTCHolder::RobotRTCHolder(const RobotRTCHolder& h) {
@@ -36,8 +40,9 @@ RobotRTCHolder::RobotRTCHolder(const RobotRTCHolder& h) {
 }
 
 RobotRTCHolder::~RobotRTCHolder() {
+	std::cout << "RobotRTCHolder::~RobotRTCHolder()" << std::endl;
   if (m_pRTC) {
-    ::CORBA::release(m_pRTC);
+    // ::CORBA::release(m_pRTC);
   }
 }
 
@@ -54,6 +59,8 @@ void RobotRTCHolder::init() {
       }
       }**/
   m_Interval = 1.0 / m_pEC->get_rate();
+  //m_Interval = 1.0 / 1000;
+  std::cout << " - Interval = " << m_Interval << std::endl;
 }
 
 void RobotRTCHolder::start() {
@@ -81,6 +88,7 @@ void RobotRTCHolder::stop() {
 }
 
 void RobotRTCHolder::tick(const float interval) {
+	std::cout << "RobotRTCHolder::tick(" << interval << ")" << std::endl;
     m_Counter += interval;
     if (m_Counter >= m_Interval) {
       m_Counter = 0;
