@@ -52,6 +52,9 @@
     <ClCompile Include="..\common\scriptFunctionDataItem.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="src\TwoWheelMobileRobotRTC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\v_repExtRTC.h">
@@ -103,6 +106,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="include\VREPRTC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TwoWheelMobileRobotRTC.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,6 +34,7 @@
     <ClCompile Include="src\SimulatorStub.cpp" />
     <ClCompile Include="src\SimulatorSVC_impl.cpp" />
     <ClCompile Include="src\Tasks.cpp" />
+    <ClCompile Include="src\TwoWheelMobileRobotRTC.cpp" />
     <ClCompile Include="src\VREPRTC.cpp" />
     <ClCompile Include="src\v_repExtRTC.cpp" />
   </ItemGroup>
@@ -53,6 +54,7 @@
     <ClInclude Include="include\SimulatorStub.h" />
     <ClInclude Include="include\SimulatorSVC_impl.h" />
     <ClInclude Include="include\Tasks.h" />
+    <ClInclude Include="include\TwoWheelMobileRobotRTC.h" />
     <ClInclude Include="include\VREPRTC.h" />
     <ClInclude Include="include\v_repExtRTC.h" />
   </ItemGroup>

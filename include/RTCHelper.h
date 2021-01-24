@@ -57,6 +57,7 @@ namespace simExtRTC {
 	bool initRTM();
 	bool exitRTM();
 	int spawnRobotRTC(const std::string& key, const std::string& arg);
+	int spawnTwoWheelMobileRobotRTC(const std::string& key, const std::string& arg);
 	int spawnRangeRTC(const std::string& key, const std::string& arg);
 	int spawnCameraRTC(const std::string& key, const std::string& arg);
 	int spawnAccelerometerRTC(const std::string& key, const std::string& arg);

@@ -17,6 +17,7 @@
 #include "GyroRTC.h"
 #include "DepthRTC.h"
 #include "RobotRTC.h"
+#include "TwoWheelMobileRobotRTC.h"
 #include "ObjectRTC.h"
 #include "RTCHelper.h"
 //#include "v_repExtRTC.h"
@@ -56,6 +57,7 @@ namespace simExtRTC {
 	void MyModuleInit(RTC::Manager* manager)
 	{
 		RobotRTCInit(manager);
+		TwoWheelMobileRobotRTCInit(manager);
 		RangeRTCInit(manager);
 		CameraRTCInit(manager);
 		AccelerometerRTCInit(manager);
@@ -129,6 +131,108 @@ namespace simExtRTC {
 	}
 
 
+	int spawnRobotRTC(const std::string& key, const std::string &arg) {
+		std::cout << "[simExtRTC] Spawning Robot RTC (objectName = " << key << ")" << std::endl;
+		simInt objHandle = simGetObjectHandle(key.c_str());
+		if (objHandle == -1) {
+			std::cout << "[simExtRTC] failed to get object handle." << std::endl;
+			return -1;
+		}
+
+		std::vector<simInt> jointHandles;
+		std::vector<std::string> jointNames;
+		getChildren(objHandle, jointHandles, jointNames, sim_object_joint_type);
+
+		std::ostringstream name_oss;
+		for (int i = 0; i < jointNames.size(); i++) {
+			name_oss << jointNames[i];
+			if (i != jointNames.size() - 1) { // If not the last object,
+				name_oss << ",";
+			}
+		}
+		std::string names = name_oss.str();
+		std::ostringstream handle_oss;
+
+		for (int i = 0; i < jointHandles.size(); i++) {
+			handle_oss << jointHandles[i];
+			if (i != jointHandles.size() - 1) { // If not the last object,
+				handle_oss << ",";
+			}
+		}
+		std::string handles = handle_oss.str();
+		//  std::cout << "[simExtRTC]  --- jointNames = " << names << std::endl;;
+		//  std::cout << "[simExtRTC]  --- jointHandles = " << handles << std::endl;;
+
+		std::ostringstream arg_oss;
+		arg_oss << "RobotRTC?"
+			<< "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+			<< "conf.default.objectName=" << key << "&"
+			<< "conf.default.controlledJointNames=" << names << "&"
+			<< "conf.default.observedJointNames=" << names << "&"
+			<< "conf.__innerparam.objectName=" << key << "&"
+			// << "conf.__innerparam.argument=" << arg << "&"
+			<< "conf.__innerparam.objectHandle=" << objHandle << "&"
+			<< "conf.__innerparam.allNames=" << names << "&"
+			<< "conf.__innerparam.allHandles=" << handles << "&"
+			<< arg;
+		RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+		robotContainer.push(cmp->getObjRef(), key);
+		return 0;
+	}
+
+
+	int spawnTwoWheelMobileRobotRTC(const std::string& key, const std::string &arg) {
+		std::cout << "[simExtRTC] Spawning TwoWheelMobileRobot RTC (objectName = " << key << ")" << std::endl;
+		simInt objHandle = simGetObjectHandle(key.c_str());
+		if (objHandle == -1) {
+			std::cout << "[simExtRTC] failed to get object handle." << std::endl;
+			return -1;
+		}
+
+		std::vector<simInt> jointHandles;
+		std::vector<std::string> jointNames;
+		getChildren(objHandle, jointHandles, jointNames, sim_object_joint_type);
+
+		std::ostringstream name_oss;
+		for (int i = 0; i < jointNames.size(); i++) {
+			name_oss << jointNames[i];
+			if (i != jointNames.size() - 1) { // If not the last object,
+				name_oss << ",";
+			}
+		}
+		std::string names = name_oss.str();
+
+		std::ostringstream handle_oss;
+		for (int i = 0; i < jointHandles.size(); i++) {
+			handle_oss << jointHandles[i];
+			if (i != jointHandles.size() - 1) { // If not the last object,
+				handle_oss << ",";
+			}
+		}
+		std::string handles = handle_oss.str();
+		//  std::cout << "[simExtRTC]  --- jointNames = " << names << std::endl;;
+		//  std::cout << "[simExtRTC]  --- jointHandles = " << handles << std::endl;;
+
+		std::string rightWheelName = jointNames[0];
+		std::string leftWheelName = jointNames[1];
+		std::ostringstream arg_oss;
+		arg_oss << "TwoWheelMobileRobotRTC?"
+			<< "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
+			<< "conf.default.objectName=" << key << "&"
+			<< "conf.default.controlledJointNames=" << names << "&"
+			<< "conf.default.observedJointNames=" << names << "&"
+			<< "conf.default.rightWheelJointName=" << rightWheelName << "&"
+			<< "conf.default.leftWheelJointName=" << leftWheelName << "&"
+			// << "conf.__innerparam.argument=" << arg << "&"
+			<< "conf.__innerparam.objectHandle=" << objHandle << "&"
+			<< "conf.__innerparam.objectName=" << key << "&"
+			<< "conf.__innerparam.allNames=" << names << "&"
+			<< "conf.__innerparam.allHandles=" << handles << "&"
+			<< arg;
+		RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
+		robotContainer.push(cmp->getObjRef(), key);
+		return 0;
+	}
 
 	int spawnRangeRTC(const std::string& key, const std::string& arg) {
 		std::cout << "[simExtRTC] Spawning RTC (objectName = " << key << ")" << std::endl;
@@ -329,54 +433,6 @@ namespace simExtRTC {
 	}
 
 
-	int spawnRobotRTC(const std::string& key, const std::string &arg) {
-		std::cout << "[simExtRTC] Spawning Robot RTC (objectName = " << key << ")" << std::endl;
-		simInt objHandle = simGetObjectHandle(key.c_str());
-		if (objHandle == -1) {
-			std::cout << "[simExtRTC] failed to get object handle." << std::endl;
-			return -1;
-		}
-
-		std::vector<simInt> jointHandles;
-		std::vector<std::string> jointNames;
-		getChildren(objHandle, jointHandles, jointNames, sim_object_joint_type);
-
-		std::ostringstream name_oss;
-		for (int i = 0; i < jointNames.size(); i++) {
-			name_oss << jointNames[i];
-			if (i != jointNames.size() - 1) { // If not the last object,
-				name_oss << ",";
-			}
-		}
-		std::string names = name_oss.str();
-
-		std::ostringstream handle_oss;
-		for (int i = 0; i < jointHandles.size(); i++) {
-			handle_oss << jointHandles[i];
-			if (i != jointHandles.size() - 1) { // If not the last object,
-				handle_oss << ",";
-			}
-		}
-		std::string handles = handle_oss.str();
-		//  std::cout << "[simExtRTC]  --- jointNames = " << names << std::endl;;
-		//  std::cout << "[simExtRTC]  --- jointHandles = " << handles << std::endl;;
-
-		std::ostringstream arg_oss;
-		arg_oss << "RobotRTC?"
-			<< "exec_cxt.periodic.type=" << "SynchExtTriggerEC" << "&"
-			<< "conf.default.objectName=" << key << "&"
-			<< "conf.default.controlledJointNames=" << names << "&"
-			<< "conf.default.observedJointNames=" << names << "&"
-			<< "conf.__innerparam.objectName=" << key << "&"
-			// << "conf.__innerparam.argument=" << arg << "&"
-			<< "conf.__innerparam.objectHandle=" << objHandle << "&"
-			<< "conf.__innerparam.allNames=" << names << "&"
-			<< "conf.__innerparam.allHandles=" << handles << "&"
-			<< arg;
-		RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
-		robotContainer.push(cmp->getObjRef(), key);
-		return 0;
-	}
 
 	void startRTCs() {
 		robotContainer.start();

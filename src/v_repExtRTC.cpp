@@ -126,6 +126,7 @@ VREP_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt) {
 
 	g_menuStatus.status = g_menuStatus.STANDBY;
 	addMenuItem("Robot", simExtRTC::spawnRobotRTC, +[](SScriptCallBack*cb) { LUA_ADD_RTC_CALLBACK(cb, "Robot", simExtRTC::spawnRobotRTC); });
+	addMenuItem("TwoWheelMobileRobot", simExtRTC::spawnTwoWheelMobileRobotRTC, +[](SScriptCallBack*cb) { LUA_ADD_RTC_CALLBACK(cb, "TwoWheelMobileRobot", simExtRTC::spawnTwoWheelMobileRobotRTC); });
 	addMenuItem("Range", simExtRTC::spawnRangeRTC, +[](SScriptCallBack*cb) { LUA_ADD_RTC_CALLBACK(cb, "Range", simExtRTC::spawnRangeRTC); });// LUA_ADD_RANGE_RTC_CALLBACK);
 	addMenuItem("Camera", simExtRTC::spawnCameraRTC, +[](SScriptCallBack*cb) { LUA_ADD_RTC_CALLBACK(cb, "Camera", simExtRTC::spawnCameraRTC); });
 	addMenuItem("Accelerometer", simExtRTC::spawnAccelerometerRTC, +[](SScriptCallBack*cb) { LUA_ADD_RTC_CALLBACK(cb, "Accelerometer", simExtRTC::spawnAccelerometerRTC); });
