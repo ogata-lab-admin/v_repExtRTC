@@ -1,6 +1,10 @@
 #include <iostream>
 
 #include "RobotRTCContainer.h"
+
+using namespace simExtRTC;
+
+
 RobotRTCContainer robotContainer;
 
 RobotRTCHolder::RobotRTCHolder(RTC::RTObject_ptr pRTC, const std::string& name, RTC::ExecutionContextBase* pEC /*=NULL*/) {

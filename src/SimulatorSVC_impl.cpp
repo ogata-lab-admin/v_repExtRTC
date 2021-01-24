@@ -8,9 +8,11 @@
 #include "SimulatorSVC_impl.h"
 #include "RTCHelper.h"
 
+using namespace simExtRTC;
+
 extern TaskQueue taskQueue;
 extern ReturnQueue returnQueue;
-extern SimulatorClock simulatorClock;
+extern simExtRTC::SimulatorClock simulatorClock;
 
 /*
  * Example implementational code for IDL interface ssr::Simulator

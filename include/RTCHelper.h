@@ -4,70 +4,76 @@
 #include "Tasks.h"
 #include "RobotRTCContainer.h"
 
-class SimulatorClock {
- private:
-  float time;
-  float timeStep;
- public:
+namespace simExtRTC {
 
- SimulatorClock() : time(0.0), timeStep(0.05) {}
-  ~SimulatorClock() {}
+	class SimulatorClock {
+	private:
+		float time;
+		float timeStep;
+	public:
 
- public:
-  float getSimulationTime() {return time;}
-  void setSimulationTime(const float time) {
-    this->time = time;
-  }
+		SimulatorClock() : time(0.0), timeStep(0.05) {}
+		~SimulatorClock() {}
 
-  float getSimulationTimeStep() {return timeStep;}
-  void setSimulationTimeStep(const float timeStep) {
-    this->timeStep = timeStep;
-  }
-};
+	public:
+		float getSimulationTime() { return time; }
+		void setSimulationTime(const float time) {
+			this->time = time;
+		}
 
-class ManagerRunner : public coil::Task {
-public:
-  ManagerRunner() {
-    open(0);
-    endflag = false;
-  }
+		float getSimulationTimeStep() { return timeStep; }
+		void setSimulationTimeStep(const float timeStep) {
+			this->timeStep = timeStep;
+		}
+	};
 
-  volatile bool endflag;
-  virtual ~ManagerRunner() {
-    //manager->shutdown();
-    //manager->join();
-    endflag = true;
-  }
+	class ManagerRunner : public coil::Task {
+	public:
+		ManagerRunner() {
+			open(0);
+			endflag = false;
+		}
 
-  virtual int open(void* arg) {
-    std::cout << " - Activating ManagerRunner" << std::endl;
-    activate();
-    return 0;
-  }
+		volatile bool endflag;
+		virtual ~ManagerRunner() {
+			//manager->shutdown();
+			//manager->join();
+			endflag = true;
+		}
 
-  virtual int svc();
+		virtual int open(void* arg) {
+			std::cout << " - Activating ManagerRunner" << std::endl;
+			activate();
+			return 0;
+		}
 
-  RTC::Manager* manager;
-};
+		virtual int svc();
 
-
-
-bool initRTM();
-bool exitRTM();
-int spawnRobotRTC(std::string& key, std::string& arg);
-int spawnRangeRTC(std::string& key, std::string& arg);
-int spawnCameraRTC(std::string& key, std::string& arg);
-int spawnAccelerometerRTC(std::string& key, std::string& arg);
-int spawnGyroRTC(std::string& key, std::string& arg);
-int spawnDepthRTC(std::string& key, std::string& arg);
-int spawnObjectRTC(std::string& key, std::string& arg);
-void startRTCs();
-void stopRTCs();
-void tickRTCs(const float interval);
-int killRTC(const std::string& key);
-int killAllRTC();
-int syncRTC(const std::string& fullpath);
-int getSyncRTCs(std::vector<std::string>& strList);
+		RTC::Manager* manager;
+	};
 
 
-extern SimulatorClock simulatorClock;
+
+	bool initRTM();
+	bool exitRTM();
+	int spawnRobotRTC(const std::string& key, const std::string& arg);
+	int spawnRangeRTC(const std::string& key, const std::string& arg);
+	int spawnCameraRTC(const std::string& key, const std::string& arg);
+	int spawnAccelerometerRTC(const std::string& key, const std::string& arg);
+	int spawnGyroRTC(const std::string& key, const std::string& arg);
+	int spawnDepthRTC(const std::string& key, const std::string& arg);
+	int spawnObjectRTC(const std::string& key, const std::string& arg);
+	void startRTCs();
+	void stopRTCs();
+	void tickRTCs(const float interval);
+	int killRTC(const std::string& key);
+	int killAllRTC();
+	int syncRTC(const std::string& fullpath);
+	int getSyncRTCs(std::vector<std::string>& strList);
+
+
+
+}
+
+
+extern simExtRTC::SimulatorClock simulatorClock;
