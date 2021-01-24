@@ -55,11 +55,11 @@ static simInt modelDlgHandle = -1;
 static simInt argDlgHandle = -1;
 static std::string modelName = "";
 static std::string argument = "";
-static std::map<simInt, void(*cb)(SScriptCallback*)> callbacks_;
+static std::map<simInt, void(*)(SScriptCallBack*)> callbacks_;
 
 
 
-static void addMenuItem(const std::string& itemName, void(*cb)(SScriptCallback*)) {
+static void addMenuItem(const std::string& itemName, void(*cb)(SScriptCallBack*)) {
   simInt itemHandle;
   simAddModuleMenuEntry("RTCPlugin", 1, &itemHandle);
   simSetModuleMenuItemState(itemHandle, 1, ("add" + itemName + "RTC").c_str());
@@ -77,24 +77,24 @@ static void addMenuItem(const std::string& itemName, void(*cb)(SScriptCallback*)
 
 static void LUA_ADD_ROBOT_RTC_CALLBACK(SScriptCallBack* cb) {
   std::cout << "[simExtRTC] Robot Menu Selected" << std::endl;
-  mainItemHandle = robotItemHandle;
-  g_menuStatus.status = MenuStatus.MODEL_NAME_DIALOG_SHOWN;  
+  //mainItemHandle = robotItemHandle;
+  g_menuStatus.status = g_menuStatus.MENU_ITEM_SELECTED;
   g_menuStatus.spawnRTCMethod = spawnRobotRTC;
   g_menuStatus.dialogMessage = "Input Robot Model Name";  
 }
 
 static void LUA_ADD_RANGE_RTC_CALLBACK(SScriptCallBack* cb) {
   std::cout << "[simExtRTC] Range Menu Selected" << std::endl;  
-  mainItemHandle = rangeItemHandle;
-  g_menuStatus.status = MODEL_NAME_DIALOG_SHOWN;  
+  //mainItemHandle = rangeItemHandle;
+  g_menuStatus.status = g_menuStatus.MENU_ITEM_SELECTED;
   g_menuStatus.spawnRTCMethod = spawnRangeRTC;
   g_menuStatus.dialogMessage = "Input Range Model Name";  
 }
 
 static void LUA_ADD_CAMERA_RTC_CALLBACK(SScriptCallBack* cb) {
   std::cout << "[simExtRTC] Camera Menu Selected" << std::endl;  
-  mainItemHandle = cameraItemHandle;
-  g_menuStatus.status = MODEL_NAME_DIALOG_SHOWN;  
+  //mainItemHandle = cameraItemHandle;
+  g_menuStatus.status = g_menuStatus.MENU_ITEM_SELECTED;
   g_menuStatus.spawnRTCMethod = spawnCameraRTC;
   g_menuStatus.dialogMessage = "Input Camera Model Name";  
 }
@@ -159,7 +159,7 @@ VREP_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
 	// Here you could handle various initializations
 	// Here you could also register custom Lua functions or custom Lua constants
 
-	g_menuStatus.status = MenuStatus.STANDBY;
+	g_menuStatus.status = g_menuStatus.STANDBY;
 	addMenuItem("Robot", LUA_ADD_ROBOT_RTC_CALLBACK);
 	addMenuItem("Range", LUA_ADD_RANGE_RTC_CALLBACK);
 	addMenuItem("Camera", LUA_ADD_CAMERA_RTC_CALLBACK);	
@@ -431,6 +431,7 @@ VREP_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,
 		if (callbacks_.count(handle) <= 0) {
 		  std::cout << "[simExtRTC] Error. simMessage callback with sim_message_eventcallback_menuitemselected, but handle can not found." << std::endl;
 		} else {
+			std::cout << "[simExtRTC] MenuItem Selected and dialog will starts...." << std::endl;
 		  callbacks_[handle](nullptr);
 		}
 		/*
@@ -473,40 +474,46 @@ VREP_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,
 
 	}
 	if (message == sim_message_eventcallback_beforerendering) {
-	  if (g_menuStatus.status == MenuStatus.MENU_ITEM_SELECTED) {
-	    g_menuStatus.dialogHandle = simDisplayDialog("Input Model Object Name",
-								  g_menuStatus.dialogMessage,
-								  sim_dlgstyle_input, "", NULL, NULL, NULL);
-	    g_menuStatus.status = MenuStatus.MODEL_NAME_DIALOG_SHOWN;
-	  } else if (g_menuStatus.status == MenuStatus.MODEL_NAME_DIALOG_SHOWN) {
-	    simInt ret = simGetDialogResult(g_menuStatus.dialogHandle);
-	    if (ret == sim_dlgret_still_open) {
+		if (g_menuStatus.status == g_menuStatus.MENU_ITEM_SELECTED) {
+			g_menuStatus.dialogHandle = simDisplayDialog("Input Model Object Name",
+				g_menuStatus.dialogMessage.c_str(),
+				sim_dlgstyle_input, "", NULL, NULL, NULL);
+			g_menuStatus.status = g_menuStatus.MODEL_NAME_DIALOG_SHOWN;
+		}
+		else if (g_menuStatus.status == g_menuStatus.MODEL_NAME_DIALOG_SHOWN) {
+			simInt ret = simGetDialogResult(g_menuStatus.dialogHandle);
+			if (ret == sim_dlgret_still_open) {
 
-	    } else if (ret == sim_dlgret_ok) {
-	      char *buf = simGetDialogInput(g_menuStatus.dialogHandle);
-	      modelName = buf;
-	      simReleaseBuffer(buf);
-	      g_menuStatus.dialogHandle = simDisplayDialog("Input Argument of RTC", "Input Argument of createComponent method", sim_dlgstyle_input, "", NULL, NULL, NULL);
-	      g_menuStatus.status == MenuStatus.ARGUMENT_DIALOG_SHOWN;
-	    } else {
-	      g_menuStatus.status == MenuStatus.STANDBY;
-	    }
-	  } else if (g_menuStatus.status == MenuStatus.ARGUMENT_DIALOG_SHOWN) {
-	    simInt ret = simGetDialogResult(g_menuStatus.dialogHandle);	    
-	    if (ret == sim_dlgret_still_open) {
-	      
-	    } else if (ret == sim_dlgret_ok) {
-	      char *buf = simGetDialogInput(g_menuStatus.dialogHandle);
-	      g_menuStatus.argument = buf;
-	      simReleaseBuffer(buf);
-	      g_menuStatus.spawnRTCMethod(g_menuStatus.modelName, g_menuStatus.argument);
-	      g_menuStatus.status == MenuStatus.STANDBY;
-	    } else {
-	      g_menuStatus.status == MenuStatus.STANDBY;
-	    }
-	    
-	  }
+			}
+			else if (ret == sim_dlgret_ok) {
+				char *buf = simGetDialogInput(g_menuStatus.dialogHandle);
+				g_menuStatus.modelName = buf;
+				simReleaseBuffer(buf);
+				g_menuStatus.dialogHandle = simDisplayDialog("Input Argument of RTC", "Input Argument of createComponent method", sim_dlgstyle_input, "", NULL, NULL, NULL);
+				g_menuStatus.status = g_menuStatus.ARGUMENT_DIALOG_SHOWN;
+			}
+			else {
+				g_menuStatus.status = g_menuStatus.STANDBY;
+			}
+		}
+		else if (g_menuStatus.status == g_menuStatus.ARGUMENT_DIALOG_SHOWN) {
+			simInt ret = simGetDialogResult(g_menuStatus.dialogHandle);
+			if (ret == sim_dlgret_still_open) {
 
+			}
+			else if (ret == sim_dlgret_ok) {
+				char *buf = simGetDialogInput(g_menuStatus.dialogHandle);
+				g_menuStatus.argument = buf;
+				simReleaseBuffer(buf);
+				g_menuStatus.spawnRTCMethod(g_menuStatus.modelName, g_menuStatus.argument);
+				g_menuStatus.status = g_menuStatus.STANDBY;
+			}
+			else {
+				g_menuStatus.status = g_menuStatus.STANDBY;
+			}
+
+		}
+	}
 	  /*
 		if (mainItemHandle >= 0) {
 
