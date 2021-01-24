@@ -32,7 +32,7 @@
 
 
 namespace { // anonymous namespace 
-	const char* version_str = "2.0.0";
+	const char* version_str = "2.0.2";
 
 
 
