@@ -2,12 +2,12 @@ VREP_DIR=../../../
 VREP_PROGRAMMING_DIR=${VREP_DIR}/programming/
 
 
-CFLAGS = -std=c++17 -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
+CFLAGS = -std=c++14 -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
 #LDFLAGS = -lpthread -ldl `rtm-config --libs` --all-static
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  -lomniORB4 -lomnithread -lomniDynamic4 -lRTC -lcoil
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 
-OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/simLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o ObjectRTC.o
+OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/simLib.o ${VREP_PROGRAMMING_DIR}common/scriptFunctionDataItem.o ${VREP_PROGRAMMING_DIR}common/scriptFunctionData.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o ObjectRTC.o
 
 OS = $(shell uname -s)
 ECHO=@
@@ -17,15 +17,15 @@ ifeq ($(OS), Linux)
 	OPTION = -shared
 	LDFLAGS =  -lpthread -ldl `rtm-config --libs` 
 	EXT = so
-	TARGET = ../lib/libv_repExtRTC.$(EXT) ../lib/rtc.conf
+	TARGET = ../lib/libsimExtRTC.$(EXT) ../lib/rtc.conf
 	BINDIR = ${VREP_DIR}
 else
 	CFLAGS += -D__APPLE__
 	OPTION = -dynamiclib -current_version 1.0
 	LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 	EXT = dylib
-	TARGET = ../lib/libv_repExtRTC.$(EXT)
-	BINDIR = ${VREP_DIR}vrep.app/Contents/MacOS/
+	TARGET = ../lib/libsimExtRTC.$(EXT)
+	BINDIR = ${VREP_DIR}coppeliaSim.app/Contents/MacOS/
 endif
 
 all: simExtRTCLib
