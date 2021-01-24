@@ -98,12 +98,12 @@ RTC::ReturnCode_t RobotRTC::onInitialize()
   bindParameter("observedJointNames", m_observedJointNames, "[]");
   // </rtc-template>
 
-  RTC_DEBUG(("[simExtRTC.RobotRTC] Initializing Robot RTC(%s)", m_properties.getProperty("conf.default.objectName")));
+  RTC_DEBUG(("[simExtRTC.RobotRTC] Initializing Robot RTC(%s)", m_properties.getProperty("conf.default.objectName").c_str()));
   std::vector<std::string> keys;
   std::vector<int32_t> values;
   
   std::string names = m_properties.getProperty("conf.__innerparam.allNames");
-  RTC_DEBUG(("[simExtRTC.RobotRTC]  - All Joint Name is %s", names));
+  RTC_DEBUG(("[simExtRTC.RobotRTC]  - All Joint Name is %s", names.c_str()));
   std::stringstream nss(names);
   std::string token;
   while(std::getline(nss, token, ',')) {
@@ -116,7 +116,7 @@ RTC::ReturnCode_t RobotRTC::onInitialize()
   }
 
   std::string handles = m_properties.getProperty("conf.__innerparam.allHandles");
-  RTC_DEBUG(("[simExtRTC.RobotRTC]  - All Joint Handle is %s", handles));
+  RTC_DEBUG(("[simExtRTC.RobotRTC]  - All Joint Handle is %s", handles.c_str()));
   std::stringstream hss(handles);
   int32_t buf;
   while(std::getline(hss, token, ',')) {
@@ -161,14 +161,14 @@ RTC::ReturnCode_t RobotRTC::onShutdown(RTC::UniqueId ec_id)
 RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
 {
 
-  RTC_DEBUG(("[simExtRTC.RobotRTC] Activating RobotRTC(%s)", m_objectName));
+  RTC_DEBUG(("[simExtRTC.RobotRTC] Activating RobotRTC(%s)", m_objectName.c_str()));
   // td::cout << " - Activating RobotRTC(" << m_objectName << ")" << std::endl;
   m_controlledJointHandle.clear();
   m_observedJointHandle.clear();
   updateParameters("default");
 
   std::string names = m_controlledJointNames;
-  RTC_DEBUG(("[simExtRTC.RobotRTC] RobotRTC(%s) config.controlledJointNames=%s", names));
+  RTC_DEBUG(("[simExtRTC.RobotRTC] RobotRTC(%s) config.controlledJointNames=%s", names.c_str()));
   std::stringstream nss(names);
   std::string token;
   while(std::getline(nss, token, ',')) {
@@ -185,7 +185,7 @@ RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
   }
 
   names = m_controlledJointNames;
-  RTC_DEBUG(("[simExtRTC.RobotRTC] RobotRTC(%s) config.observedJointNames=%s", names));
+  RTC_DEBUG(("[simExtRTC.RobotRTC] RobotRTC(%s) config.observedJointNames=%s", names.c_str()));
   std::stringstream nss2(names);
   while(std::getline(nss2, token, ',')) {
     std::stringstream trimmer;
@@ -209,7 +209,7 @@ RTC::ReturnCode_t RobotRTC::onActivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t RobotRTC::onDeactivated(RTC::UniqueId ec_id)
 {
-	RTC_DEBUG(("[simExtRTC.RobotRTC] Deactivating RobotRTC(%s)", m_objectName));
+  RTC_DEBUG(("[simExtRTC.RobotRTC] Deactivating RobotRTC(%s)", m_objectName.c_str()));
 	m_controlledJointHandle.clear();
 	m_observedJointHandle.clear();
 	return RTC::RTC_OK;
@@ -222,7 +222,7 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
     m_targetPositionIn.read();
     if (m_controlledJointHandle.size() != m_targetPosition.data.length()) {
 		RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): Invalid Data number of targetPosition. This RTC reuqires %d data size. But %d data is sent.",
-			m_objectName, m_controlledJointHandle.size(), m_targetPosition.data.length()));
+			   m_objectName.c_str(), m_controlledJointHandle.size(), m_targetPosition.data.length()));
 		return RTC::RTC_ERROR;
     }
     for(uint32_t i = 0;i < m_targetPosition.data.length();i++) {
@@ -234,7 +234,7 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
     m_targetVelocityIn.read();
     if (m_controlledJointHandle.size() != m_targetVelocity.data.length()) {
 		RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): Invalid Data number of targetVelocity. This RTC reuqires %d data size. But %d data is sent.",
-			m_objectName, m_controlledJointHandle.size(), m_targetVelocity.data.length()));
+			   m_objectName.c_str(), m_controlledJointHandle.size(), m_targetVelocity.data.length()));
         return RTC::RTC_ERROR;
     }
     for(uint32_t i = 0;i < m_targetVelocity.data.length();i++) {
@@ -246,7 +246,7 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
     m_targetForceIn.read();
     if (m_controlledJointHandle.size() != m_targetForce.data.length()) {
 		RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): Invalid Data number of targetForce. This RTC reuqires %d data size. But %d data is sent.",
-			m_objectName, m_controlledJointHandle.size(), m_targetForce.data.length()));
+			   m_objectName.c_str(), m_controlledJointHandle.size(), m_targetForce.data.length()));
         return RTC::RTC_ERROR;
     }
     for(uint32_t i = 0;i < m_targetForce.data.length();i++) {
@@ -262,7 +262,7 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
   for(uint32_t i = 0;i < sz;i++) {
     float buf;
     if (simGetJointPosition(m_observedJointHandle[i], &buf) < 0) {
-		RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): GetJointPosition failed.", m_objectName));
+      RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): GetJointPosition failed.", m_objectName.c_str()));
 		return RTC::RTC_ERROR;
     }
 
@@ -273,7 +273,7 @@ RTC::ReturnCode_t RobotRTC::onExecute(RTC::UniqueId ec_id)
     m_currentVelocity.data[i] = v;
 
     if (simJointGetForce(m_observedJointHandle[i], &buf) < 0) {
-		RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): GetJointForce failed.", m_objectName));
+      RTC_DEBUG(("[simExtRTC.RobotRTC(%s)] onExecute(): GetJointForce failed.", m_objectName.c_str()));
 		return RTC::RTC_ERROR;
     }
     m_currentForce.data[i] = buf;
