@@ -74,7 +74,7 @@ class RobotRTCContainer : public std::vector<RobotRTCHolder> {
 	return false;
       }
     }
-    this->emplace_back(RobotRTCHolder(pRTC, objectName, pEC));
+    this->push_back(RobotRTCHolder(pRTC, objectName, pEC));
     return true;
   }
 

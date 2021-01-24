@@ -1,12 +1,13 @@
 VREP_DIR=../../../
 VREP_PROGRAMMING_DIR=${VREP_DIR}/programming/
 
-CFLAGS = -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
+
+CFLAGS = -std=c++17 -I../include -I${VREP_PROGRAMMING_DIR}include -Wall -fPIC `rtm-config --cflags` 
 #LDFLAGS = -lpthread -ldl `rtm-config --libs` --all-static
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  -lomniORB4 -lomnithread -lomniDynamic4 -lRTC -lcoil
 #LDFLAGS = -static -lpthread -ldl -L/usr/local/lib -export-dynamic -L/usr/local/lib -static  /usr/local/lib/libomniORB4.a /usr/local/lib/libomnithread.a /usr/local/lib/libomniDynamic4.a /usr/local/lib/libcoil.a /usr/local/lib/libRTC.a 
 
-OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/v_repLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o ObjectRTC.o
+OBJS = v_repExtRTC.o ${VREP_PROGRAMMING_DIR}common/simLib.o VREPRTC.o SimulatorSVC_impl.o SimulatorStub.o RTCHelper.o RobotRTC.o Tasks.o RobotRTCContainer.o RangeRTC.o CameraRTC.o AccelerometerRTC.o GyroRTC.o DepthRTC.o ObjectRTC.o
 
 OS = $(shell uname -s)
 ECHO=@
@@ -27,9 +28,9 @@ else
 	BINDIR = ${VREP_DIR}vrep.app/Contents/MacOS/
 endif
 
-all: v_repExtRTCLib
+all: simExtRTCLib
 
-v_repExtRTCLib: $(OBJS)
+simExtRTCLib: $(OBJS)
 		@mkdir -p ../lib
 		@echo "Linking $(OBJS) to $(TARGET)"
 		$(ECHO)$(CXX) $(CFLAGS) $(OBJS) $(OPTION) -o $(TARGET) $(LDFLAGS)
