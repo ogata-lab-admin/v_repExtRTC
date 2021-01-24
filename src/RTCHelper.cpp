@@ -28,7 +28,7 @@ int ManagerRunner::svc() {
   int argc = 1;
   char* argv[1] = {"vrep"};
  
-  std::cout << " - ManagerRunner::svc() starts." << std::endl; 
+  std::cout << "[simExtRTC] ManagerRunner::svc() starts." << std::endl; 
   manager = RTC::Manager::init(argc, argv);
   manager->init(argc, argv);
   manager->setModuleInitProc(MyModuleInit);
@@ -38,12 +38,12 @@ int ManagerRunner::svc() {
   }
 
 
-  std::cout << " - ManagerRunner::svc() ending." << std::endl; 
+  std::cout << "[simExtRTC] ManagerRunner::svc() ending." << std::endl; 
 
   manager->unloadAll();
   manager->shutdown();
   manager->join();
-  std::cout << " - ManagerRunner::svc() ends." << std::endl; 
+  std::cout << "[simExtRTC] ManagerRunner::svc() ends." << std::endl; 
   return 0;
 }
 
@@ -126,10 +126,10 @@ static simInt getChildren(simInt h, std::vector<simInt>& jointHandles, std::vect
 }
 
 int spawnRangeRTC(std::string& key, std::string& arg) {
-  std::cout << " -- Spawning RTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning RTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- Failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] Failed to get object handle." << std::endl;
     return -1;
   }
 
@@ -138,7 +138,7 @@ int spawnRangeRTC(std::string& key, std::string& arg) {
   getChildren(objHandle, sensorHandles, sensorNames, sim_object_proximitysensor_type);
 
   if (sensorHandles.size() !=1 || sensorNames.size() != 1) {
-    std::cout << " --- Failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] Failed to get object handle." << std::endl;
     return -1;
   }
 
@@ -146,7 +146,7 @@ int spawnRangeRTC(std::string& key, std::string& arg) {
   simInt bufSize = 4096;
   simInt tubeHandle = simTubeOpen(0, (key+"_HOKUYO").c_str(), bufSize, false);
   if (tubeHandle < 0) {
-    std::cout << " --- Can not open Communication Tube to " << key << std::endl;
+    std::cout << "[simExtRTC] Can not open Communication Tube to " << key << std::endl;
     return -1;
   }
 
@@ -168,16 +168,16 @@ int spawnRangeRTC(std::string& key, std::string& arg) {
 
 
 int spawnCameraRTC(std::string& key, std::string& arg) {
-  std::cout << " -- Spawning Camera RTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning Camera RTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] failed to get object handle." << std::endl;
     return -1;
   }
 
   simInt objType = simGetObjectType(objHandle);
   if (objType != sim_object_visionsensor_type) {
-    std::cout << " --- Object "<<key << "is not Vision Sensor Type." << std::endl;
+    std::cout << "[simExtRTC] Object "<<key << "is not Vision Sensor Type." << std::endl;
     return -1;
   }
   std::ostringstream arg_oss;
@@ -190,16 +190,15 @@ int spawnCameraRTC(std::string& key, std::string& arg) {
 	  << arg;
   RTObject_impl* cmp = RTC::Manager::instance().createComponent(arg_oss.str().c_str());
   robotContainer.push(cmp->getObjRef(), key);
-
   return 0;
 }
 
 
 int spawnAccelerometerRTC(std::string& key, std::string& arg) {
-  std::cout << " -- Spawning AccelerometerRTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning AccelerometerRTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- Failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] Failed to get object handle." << std::endl;
     return -1;
   }
   
@@ -211,7 +210,7 @@ int spawnAccelerometerRTC(std::string& key, std::string& arg) {
 
   simInt tubeHandle = simTubeOpen(0, oss.str().c_str(), bufSize, false);
   if (tubeHandle < 0) {
-    std::cout << " --- Can not open Communication Tube to " << key << std::endl;
+    std::cout << "[simExtRTC] Can not open Communication Tube to " << key << std::endl;
     return -1;
   }
 
@@ -233,10 +232,10 @@ int spawnAccelerometerRTC(std::string& key, std::string& arg) {
 
 
 int spawnGyroRTC(std::string& key, std::string& arg) {
-  std::cout << " -- Spawning GyroRTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning GyroRTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- Failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] Failed to get object handle." << std::endl;
     return -1;
   }
   
@@ -247,7 +246,7 @@ int spawnGyroRTC(std::string& key, std::string& arg) {
   std::string handle;
   simInt tubeHandle = simTubeOpen(0, oss.str().c_str(), bufSize, false);
   if (tubeHandle < 0) {
-    std::cout << " --- Can not open Communication Tube to " << key << std::endl;
+    std::cout << "[simExtRTC] Can not open Communication Tube to " << key << std::endl;
     return -1;
   }
 
@@ -268,16 +267,16 @@ int spawnGyroRTC(std::string& key, std::string& arg) {
 }
 
 int spawnDepthRTC(std::string& key, std::string& arg) {
-  std::cout << " -- Spawning Depth RTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning Depth RTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] failed to get object handle." << std::endl;
     return -1;
   }
 
   simInt objType = simGetObjectType(objHandle);
   if (objType != sim_object_visionsensor_type) {
-    std::cout << " --- Object "<<key << "is not Vision Sensor Type." << std::endl;
+    std::cout << "[simExtRTC] Object "<<key << "is not Vision Sensor Type." << std::endl;
     return -1;
   }
   std::ostringstream arg_oss;
@@ -296,10 +295,10 @@ int spawnDepthRTC(std::string& key, std::string& arg) {
 
 
 int spawnObjectRTC(std::string& key, std::string& arg) {
-	std::cout << " -- Spawning Object RTC (objectName = " << key << ")" << std::endl;
+	std::cout << "[simExtRTC] Spawning Object RTC (objectName = " << key << ")" << std::endl;
 	simInt objHandle = simGetObjectHandle(key.c_str());
 	if (objHandle == -1) {
-		std::cout << " --- failed to get object handle." << std::endl;
+		std::cout << "[simExtRTC] failed to get object handle." << std::endl;
 		return -1;
 	}
 
@@ -326,10 +325,10 @@ int spawnObjectRTC(std::string& key, std::string& arg) {
 
 
 int spawnRobotRTC(std::string& key, std::string &arg) {
-  std::cout << " -- Spawning RTC (objectName = " << key << ")" << std::endl;
+  std::cout << "[simExtRTC] Spawning Robot RTC (objectName = " << key << ")" << std::endl;
   simInt objHandle = simGetObjectHandle(key.c_str());
   if (objHandle == -1) {
-    std::cout << " --- failed to get object handle." << std::endl;
+    std::cout << "[simExtRTC] failed to get object handle." << std::endl;
     return -1;
   }
 
@@ -354,8 +353,8 @@ int spawnRobotRTC(std::string& key, std::string &arg) {
     }
   }
   std::string handles = handle_oss.str();
-  std::cout << " --- jointNames = " << names << std::endl;;
-  std::cout << " --- jointHandles = " << handles << std::endl;;
+  //  std::cout << "[simExtRTC]  --- jointNames = " << names << std::endl;;
+  //  std::cout << "[simExtRTC]  --- jointHandles = " << handles << std::endl;;
 
   std::ostringstream arg_oss;
   arg_oss << "RobotRTC?"
@@ -396,7 +395,7 @@ int killAllRTC() {
 }
 
 int syncRTC(const std::string& fullpath) {
-  std::cout << " -- syncRTC to " << fullpath << std::endl;
+  std::cout << "[simExtRTC] syncRTC to " << fullpath << std::endl;
   std::istringstream iss(fullpath);
   
   std::string nsAddr;
@@ -404,8 +403,8 @@ int syncRTC(const std::string& fullpath) {
 
   std::getline(iss, nsAddr, '/');
   std::getline(iss, rtcName);
-  std::cout << " --- NameServer : " << nsAddr << std::endl;
-  std::cout << " --- RTC        : " << rtcName << std::endl;
+  std::cout << "[simExtRTC] --- NameServer : " << nsAddr << std::endl;
+  std::cout << "[simExtRTC] --- RTC        : " << rtcName << std::endl;
 
   CorbaNaming corbaNaming((RTC::Manager::instance().getORB()),
 			  nsAddr.c_str());
@@ -414,16 +413,16 @@ int syncRTC(const std::string& fullpath) {
   try {
     ::CORBA::Object_ptr object = corbaNaming.resolve(rtcName.c_str());
     if(::CORBA::is_nil(object)) {
-      std::cout << " --- resolve failed" << std::endl;
+      std::cout << "[simExtRTC] --- resolve failed" << std::endl;
       return -1;
     }
     corbaConsumer.setObject(object);
 
     RTC::ExecutionContextList_var ecList = corbaConsumer->get_owned_contexts();
     double rate = ecList[0]->get_rate();
-    std::cout << " --- EC[0]'s rate = " << rate << std::endl;
+    std::cout << "[simExtRTC] --- EC[0]'s rate = " << rate << std::endl;
 
-    std::cout << " --- Creating SynchExtTriggerEC" << std::endl;
+    std::cout << "[simExtRTC] --- Creating SynchExtTriggerEC" << std::endl;
     std::ostringstream oss;
     oss << "SynchExtTriggerEC";// << "?" << "exec_cxt.periodic.rate=" << rate;
     ///ExecutionContextBase* pEC = RTC::ExecutionContextFactory::instance().createObject(oss.str().c_str());
@@ -433,22 +432,22 @@ int syncRTC(const std::string& fullpath) {
 	// pEC->set_rate(rate);
 	pEC->setRate(rate);
 
-    std::cout << " --- Add Component to ExecutionContext." << std::endl;
+    std::cout << "[simExtRTC] --- Add Component to ExecutionContext." << std::endl;
     RTC::RTObject_ptr rtc_ptr = RTC::RTObject::_narrow(corbaConsumer._ptr());
     
     RTC::ReturnCode_t r = pEC->addComponent(rtc_ptr);
 	//RTC::ReturnCode_t r = pEC->add_component(rtc_ptr);
 
     if (r != RTC::RTC_OK) {
-      std::cout << " --- addComponent failed." << std::endl;
+      std::cout << "[simExtRTC] --- addComponent failed." << std::endl;
       return -1;
     }
-    std::cout << " --- Starting ExecutionContext." << std::endl;
+    std::cout << "[simExtRTC] --- Starting ExecutionContext." << std::endl;
     pEC->start();
     //ecList[0]->stop();
     robotContainer.push(rtc_ptr, fullpath, pEC);
   } catch (CosNaming::NamingContext::NotFound& e) {
-    std::cout << " --- Name resolve failed" << std::endl;
+    std::cout << "[simExtRTC] --- Name resolve failed" << std::endl;
     return -1;
   }
   return 0;
