@@ -59,7 +59,7 @@ static void addMenuItem(const std::string& itemName, int(*spawnRTCMethod)(std::s
   simAddModuleMenuEntry("RTCPlugin", 1, &itemHandle);
   simSetModuleMenuItemState(itemHandle, 1, ("add" + itemName + "RTC").c_str());
   //callbacks_[itemHandle] = cb;
-  g_menuStatus.callbacks[itemHandle] = [&itemName]() {
+  g_menuStatus.callbacks[itemHandle] = [itemName, spawnRTCMethod]() {
     std::cout << "[simExtRTC] " << itemName << " Menu Selected" << std::endl;
     g_menuStatus.status = g_menuStatus.MENU_ITEM_SELECTED;
     g_menuStatus.spawnRTCMethod = spawnRTCMethod;
@@ -82,7 +82,7 @@ const int inArgs_ADD_RTC[]={
 };
 
 
-static void LUA_ADD_RTC_CALLBACK(SScriptCallback* cb, const std::string& itemName, int(*spawnRTCMethod)(std::string&,std::string&)) {
+static void LUA_ADD_RTC_CALLBACK(SScriptCallBack* cb, const std::string& itemName, int(*spawnRTCMethod)(std::string&,std::string&)) {
   std::cout << "[simExtRTC] add"<<itemName<<"RTC() called" << std::endl;
   CScriptFunctionData D;
   int handle=-1;
@@ -93,7 +93,7 @@ static void LUA_ADD_RTC_CALLBACK(SScriptCallback* cb, const std::string& itemNam
     std::string modelName = buf;
     std::cout << "[simExtRTC] modelName is " << modelName << std::endl;
 
-    buf = inData->at(0).stringData[0];
+    buf = inData->at(1).stringData[0];
     std::string argument = buf;
     std::cout << "[simExtRTC] argument is " << argument << std::endl;
 
@@ -114,6 +114,22 @@ static void LUA_ADD_RANGE_RTC_CALLBACK(SScriptCallBack* cb) {
 
 static void LUA_ADD_CAMERA_RTC_CALLBACK(SScriptCallBack* cb) {
   LUA_ADD_RTC_CALLBACK(cb, "Camera", spawnCameraRTC);  
+}
+
+static void LUA_ADD_ACCEL_RTC_CALLBACK(SScriptCallBack* cb) {
+	LUA_ADD_RTC_CALLBACK(cb, "Accelerometer", spawnAccelerometerRTC);
+}
+
+static void LUA_ADD_GYRO_RTC_CALLBACK(SScriptCallBack* cb) {
+	LUA_ADD_RTC_CALLBACK(cb, "Gyro", spawnGyroRTC);
+}
+
+static void LUA_ADD_DEPTH_RTC_CALLBACK(SScriptCallBack* cb) {
+	LUA_ADD_RTC_CALLBACK(cb, "Depth", spawnDepthRTC);
+}
+
+static void LUA_ADD_OBJECT_RTC_CALLBACK(SScriptCallBack* cb) {
+	LUA_ADD_RTC_CALLBACK(cb, "Object", spawnObjectRTC);
 }
 
 
@@ -180,6 +196,10 @@ VREP_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
 	addMenuItem("Robot", spawnRobotRTC, LUA_ADD_ROBOT_RTC_CALLBACK);
 	addMenuItem("Range", spawnRangeRTC, LUA_ADD_RANGE_RTC_CALLBACK);
 	addMenuItem("Camera", spawnCameraRTC, LUA_ADD_CAMERA_RTC_CALLBACK);
+	addMenuItem("Accelerometer", spawnAccelerometerRTC, LUA_ADD_ACCEL_RTC_CALLBACK);
+	addMenuItem("Gyro", spawnGyroRTC, LUA_ADD_GYRO_RTC_CALLBACK);
+	addMenuItem("Depth", spawnDepthRTC, LUA_ADD_DEPTH_RTC_CALLBACK);
+	addMenuItem("Object", spawnObjectRTC, LUA_ADD_OBJECT_RTC_CALLBACK);
 	/*
 	simRegisterScriptCallbackFunction(strConCat(LUA_ADD_ROBOT_RTC_COMMAND, "@", PLUGIN_NAME),
 					  strConCat("number return_status=", LUA_ADD_ROBOT_RTC_COMMAND, "(string modelName,string rtc_argument)"), 
@@ -417,11 +437,11 @@ VREP_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,
 	if (message == sim_message_eventcallback_menuitemselected) {
 		simInt handle = auxiliaryData[0];
 		simInt state = auxiliaryData[1];
-		if (callbacks_.count(handle) <= 0) {
+		if (g_menuStatus.callbacks.count(handle) <= 0) {
 		  std::cout << "[simExtRTC] Error. simMessage callback with sim_message_eventcallback_menuitemselected, but handle can not found." << std::endl;
 		} else {
 			std::cout << "[simExtRTC] MenuItem Selected and dialog will starts...." << std::endl;
-		  callbacks_[handle](nullptr);
+		  g_menuStatus.callbacks[handle]();
 		}
 	}
 	if (message == sim_message_eventcallback_beforerendering) {

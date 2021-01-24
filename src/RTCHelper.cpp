@@ -156,7 +156,7 @@ int spawnRangeRTC(std::string& key, std::string& arg) {
 	  << "conf.default.objectName=" << key << "&"
     ///<< "conf.default.activeJointNames=" << names << "&"
 	  << "conf.__innerparam.objectName=" << key << "&"
-    //<< "conf.__innerparam.argument=" << arg << "&"
+      //<< "conf.__innerparam.argument=" << arg << "&"
 	  << "conf.__innerparam.objectHandle=" << objHandle << "&"
 	  << "conf.__innerparam.tubeHandle=" << tubeHandle<< "&"
 	  << "conf.__innerparam.bufSize=" << bufSize << "&"

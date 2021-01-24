@@ -46,6 +46,12 @@
     <ClCompile Include="..\common\simLib.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\scriptFunctionData.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\scriptFunctionDataItem.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\v_repExtRTC.h">

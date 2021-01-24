@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\scriptFunctionData.cpp" />
+    <ClCompile Include="..\common\scriptFunctionDataItem.cpp" />
     <ClCompile Include="..\common\simLib.cpp" />
     <ClCompile Include="src\AccelerometerRTC.cpp" />
     <ClCompile Include="src\CameraRTC.cpp" />
