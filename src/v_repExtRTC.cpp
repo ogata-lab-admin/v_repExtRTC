@@ -13,7 +13,7 @@
 // For RTC 
 #include "RTCHelper.h"
 
-static const char* version_str = "2.0.0";
+static const char* version_str = "2.0.1";
 #define PLUGIN_NAME "ExtRTC"
 
 #ifdef _WIN32
