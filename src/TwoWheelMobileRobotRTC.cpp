@@ -117,7 +117,6 @@ RTC::ReturnCode_t TwoWheelMobileRobotRTC::onInitialize()
 	  trimmer >> token;
 	  std::cout << " key = " << token << std::endl;
 	  keys.push_back(token);
-	  
   }
 
   std::string handles = m_properties.getProperty("conf.__innerparam.allHandles");
